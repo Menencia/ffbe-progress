@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 
+import { auth } from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
-// import { Observable } from 'rxjs/Observable';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+
+import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+
 import { User } from './models/user';
 
 import * as moment from 'moment';
@@ -12,33 +16,25 @@ import * as moment from 'moment';
 })
 export class AuthService {
 
-  /*user$: Observable<User>;
+  user$: Observable<User>;
 
   constructor(
     public afAuth: AngularFireAuth,
     public afs: AngularFirestore
   ) {
-    this.user$ = this.afAuth.authState
-      .switchMap(user => {
+    this.user$ = this.afAuth.authState.pipe(
+      switchMap(user => {
         if (user) {
-          const userRef = this.afs.doc<User>(`users/${user.uid}`);
-          // disable this ?
-          userRef.update({
-            lastConnected: moment().toDate()
-          });
-          return userRef.valueChanges();
+          return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
         } else {
-          return Observable.of(null);
+          return of(null);
         }
-      });
-  }
-
-  async getUser() {
-    return await this.user$.first().toPromise();
+      })
+    );
   }
 
   login() {
-    this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
+    this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
       .then(credential => {
         this.updateUser(credential.user);
       });
@@ -50,7 +46,9 @@ export class AuthService {
 
   private updateUser(user) {
 
-    const createData: User = {
+    const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
+
+    const data: User = {
       uid: user.uid,
       name: user.displayName,
       email: user.email,
@@ -58,22 +56,7 @@ export class AuthService {
       lastConnected: moment().toDate(),
       banned: false
     };
-    const updateData = {
-      name: user.displayName,
-      email: user.email,
-      lastConnected: moment().toDate(),
-    };
 
-    this.afs.doc(`users/${user.uid}`)
-      .update(updateData)
-      .then(() => {
-        // update successful (document exists)
-      })
-      .catch((error) => {
-        // (document does not exists)
-        this.afs.doc(`users/${user.uid}`)
-          .set(createData);
-      });
-
-  }*/
+    return userRef.set(data, { merge: true });
+  }
 }

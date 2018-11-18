@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { auth } from 'firebase/app';
+import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-login',
   template: `
-    <div *ngIf="afAuth.user | async as user; else showLogin">
-      <h1>Hello {{ user.displayName }}!</h1>
+    <div *ngIf="auth.user$ | async as user; else showLogin">
+      <h1>Hello {{ user.name }}!</h1>
       <button (click)="logout()">Logout</button>
     </div>
     <ng-template #showLogin>
@@ -18,16 +17,16 @@ import { auth } from 'firebase/app';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(public afAuth: AngularFireAuth) { }
+  constructor(public auth: AuthService) { }
 
   ngOnInit() {
   }
 
   login() {
-    this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
+    this.auth.login();
   }
   logout() {
-    this.afAuth.auth.signOut();
+    this.auth.logout();
   }
 
 }
