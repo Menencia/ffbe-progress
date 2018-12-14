@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Challenge } from './models/challenge';
+import { MyChallenge } from './models/my_challenge';
 
 @Component({
   selector: 'app-root',
@@ -6,10 +9,24 @@ import { Component } from '@angular/core';
     <div>
       <h1>ffbe-progress</h1>
       <app-login></app-login>
+      <app-challenges [challenges]="challenges"></app-challenges>
     </div>
   `,
   styles: []
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'app';
+  challenges: MyChallenge[];
+
+  constructor(public http: HttpClient) {
+    this.challenges = [];
+  }
+
+  ngOnInit() {
+    this.http.get('assets/missions.json').subscribe((data: Challenge[]) => {
+      this.challenges = data.map((challenge: Challenge) => {
+        return new MyChallenge(challenge);
+      });
+    });
+  }
 }
