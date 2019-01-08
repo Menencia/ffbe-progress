@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Challenge } from './models/challenge';
 import { AuthService } from './auth.service';
 import { MyChallenge } from './models/my_challenge';
 
@@ -7,13 +6,29 @@ import { MyChallenge } from './models/my_challenge';
   selector: 'app-challenges',
   template: `
     <div *ngFor="let c of challenges">
-      {{c.challenge.label}}
-      <input type="checkbox" [checked]="c.done">
-      <input type="number" [value]="c.nbMissions"/>
+      <div uk-grid>
+        <div class="uk-width-1-2">{{c.challenge.label}}</div>
+        <div class="uk-width-1-4">
+          <a class="uk-badge" [class.active]="c.done" (click)="markAsDone(c, 0)">Terminé</a>
+          <ng-container *ngIf="c.challenge.missions">
+            <a *ngFor="let m of [1, 2, 3]" class="uk-badge" [class.active]="m === c.nbMissions" (click)="markAsDone(c, m)">
+              {{m}}
+            </a>
+          </ng-container>
+        </div>
+        <div class="uk-width-1-4">
+          {{c.getPts()}}pts
+        </div>
+      </div>
     </div>
-    <button (click)="save()" *ngIf="auth.user$ | async">Sauvegarder</button>
-  `,
-  styles: []
+    <button class="uk-button uk-align-center" (click)="save()" *ngIf="auth.user$ | async">Sauvegarder</button>
+    `,
+  styles: [`
+    .active {
+      background-color: #900;
+      color: #fff;
+    }
+  `]
 })
 export class ChallengesComponent implements OnInit {
 
@@ -24,8 +39,19 @@ export class ChallengesComponent implements OnInit {
   ngOnInit() {
   }
 
+  markAsDone(c: MyChallenge, nb: number) {
+    if (c.done && nb === c.nbMissions) {
+      c.done = false;
+      c.nbMissions = 0;
+    } else {
+      c.done = true;
+      c.nbMissions = nb;
+    }
+  }
+
   save() {
     console.log('save()');
+    console.log(this.challenges);
   }
 
 }

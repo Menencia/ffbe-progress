@@ -7,7 +7,6 @@ import { MyChallenge } from './models/my_challenge';
   selector: 'app-root',
   template: `
     <div>
-      <h1>ffbe-progress</h1>
       <app-login></app-login>
       <app-challenges [challenges]="challenges"></app-challenges>
     </div>
