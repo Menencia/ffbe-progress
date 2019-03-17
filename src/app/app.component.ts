@@ -1,31 +1,36 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Challenge } from './models/challenge';
 import { MyChallenge } from './models/my_challenge';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   template: `
     <div>
       <app-login></app-login>
-      <app-challenges [challenges]="challenges"></app-challenges>
+      <app-challenges [challenges]="challenges | async"></app-challenges>
     </div>
   `,
   styles: []
 })
 export class AppComponent implements OnInit {
   title = 'app';
-  challenges: MyChallenge[];
+  challenges: Observable<Challenge[]>;
 
-  constructor(public http: HttpClient) {
-    this.challenges = [];
+  constructor(public afs: AngularFirestore) {
+
   }
 
   ngOnInit() {
-    this.http.get('assets/missions.json').subscribe((data: Challenge[]) => {
-      this.challenges = data.map((challenge: Challenge) => {
-        return new MyChallenge(challenge);
-      });
-    });
+    const challengesRef = this.afs.collection<Challenge>('challenges');
+    this.challenges = challengesRef.snapshotChanges().pipe(
+      map(actions => actions.map(a => {
+        const uid = a.payload.doc.id;
+        const data = a.payload.doc.data() as Challenge;
+        return {uid, ...data};
+      }))
+    );
   }
 }

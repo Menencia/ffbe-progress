@@ -4,9 +4,9 @@ export class MyChallenge {
   done: boolean;
   nbMissions: number;
 
-  constructor(public challenge: Challenge) {
-    this.done = false;
-    this.nbMissions = 0;
+  constructor(public challenge: Challenge, done = false, nbMissions = 0) {
+    this.done = done;
+    this.nbMissions = nbMissions;
   }
 
   getPts() {

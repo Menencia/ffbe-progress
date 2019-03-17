@@ -3,14 +3,15 @@ import { AuthService } from './auth.service';
 import { MyChallenge } from './models/my_challenge';
 import { GameService } from './game.service';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { Challenge } from './models/challenge';
 import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-challenges',
   template: `
-    <div *ngFor="let c of challenges">
+    <div *ngFor="let c of mychallenges">
       <div uk-grid>
-        <div class="uk-width-1-2">{{c.challenge.label}}</div>
+        <div class="uk-width-1-2">{{c.challenge.label.fr}}</div>
         <div class="uk-width-1-4">
           <a class="uk-badge" [class.active]="c.done" (click)="markAsDone(c, 0)">Terminé</a>
           <ng-container *ngIf="c.challenge.missions">
@@ -35,7 +36,9 @@ import { map } from 'rxjs/operators';
 })
 export class ChallengesComponent implements OnInit {
 
-  @Input() challenges: MyChallenge[];
+  @Input() challenges: Challenge[];
+
+  mychallenges: MyChallenge[] = [];
 
   constructor(
     public auth: AuthService,
@@ -45,13 +48,25 @@ export class ChallengesComponent implements OnInit {
 
   ngOnInit() {
     this.auth.user$.subscribe(user => {
-      const mychallengeRef = this.afs.doc(`mychallenges/${user.uid}`);
-      mychallengeRef.get().subscribe(doc => {
-        const mychallenges = doc.data().items;
-        for (const mychallenge of mychallenges) {
-          const found = this.challenges.find(mc => mc.challenge.uid === mychallenge.challenge);
-          found.done = true;
-          found.nbMissions = mychallenge.nbMissions;
+      const mychallengesRef = this.afs.doc(`users/${user.uid}`).collection('mychallenges');
+      const mychallenges = mychallengesRef.snapshotChanges().pipe(
+        map(actions => actions.map(a => {
+          const data = a.payload.doc.data();
+          return {...data};
+        }))
+      );
+      mychallenges.subscribe(data => {
+        for (const challenge of this.challenges) {
+          let done, nbMissions;
+          const mychallenge = data.find(c => c.challenge === challenge.uid);
+          if (mychallenge) {
+            done = true;
+            nbMissions = mychallenge.nbMissions;
+          } else {
+            done = false;
+            nbMissions = 0;
+          }
+          this.mychallenges.push(new MyChallenge(challenge, done, nbMissions));
         }
       });
     });
@@ -69,7 +84,7 @@ export class ChallengesComponent implements OnInit {
 
   async save() {
     this.auth.user$.subscribe(user => {
-      this.game.save(this.challenges, user.uid);
+      this.game.save(this.mychallenges, user.uid);
     });
   }
 
