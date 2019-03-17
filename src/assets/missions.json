@@ -1,25 +1,30 @@
 [
   {
+    "uid": "trial-0001",
     "label": "Attaque du Intangir",
     "points": 1,
     "missions": true
   },
   {
+    "uid": "trial-0002",
     "label": "Mépris du dragon blanc",
     "points": 6,
     "missions": true
   },
   {
+    "uid": "trial-0003",
     "label": "Le stratège troublé - Sheratan",
     "points": 9,
     "missions": true
   },
   {
+    "uid": "trial-0004",
     "label": "Bahamut 1* (Sommet éternel)",
     "points": 5,
     "missions": true
   },
   {
+    "uid": "trial-0005",
     "label": "Le chevalier de Grandshelt - Charlotte",
     "points": 5,
     "missions": false

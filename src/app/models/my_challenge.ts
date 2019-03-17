@@ -25,4 +25,11 @@ export class MyChallenge {
 
     return pts;
   }
+
+  export() {
+    return {
+      challenge: this.challenge.uid,
+      nbMissions: this.nbMissions,
+    };
+  }
 }
