@@ -2,6 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { AuthService } from './auth.service';
 import { MyChallenge } from './models/my_challenge';
 import { GameService } from './game.service';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-challenges',
@@ -35,9 +37,24 @@ export class ChallengesComponent implements OnInit {
 
   @Input() challenges: MyChallenge[];
 
-  constructor(public auth: AuthService, public game: GameService) { }
+  constructor(
+    public auth: AuthService,
+    public game: GameService,
+    public afs: AngularFirestore,
+  ) { }
 
   ngOnInit() {
+    this.auth.user$.subscribe(user => {
+      const mychallengeRef = this.afs.doc(`mychallenges/${user.uid}`);
+      mychallengeRef.get().subscribe(doc => {
+        const mychallenges = doc.data().items;
+        for (const mychallenge of mychallenges) {
+          const found = this.challenges.find(mc => mc.challenge.uid === mychallenge.challenge);
+          found.done = true;
+          found.nbMissions = mychallenge.nbMissions;
+        }
+      });
+    });
   }
 
   markAsDone(c: MyChallenge, nb: number) {
