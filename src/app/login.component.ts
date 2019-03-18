@@ -6,15 +6,19 @@ import { AuthService } from './auth.service';
   template: `
     <nav class="uk-navbar-container uk-margin" uk-navbar>
       <div class="uk-navbar-left">
-        <a class="uk-navbar-item uk-logo">FFBE progress</a>
+        <a class="uk-navbar-item uk-logo" href="#">FFBE progress</a>
+        <div class="uk-navbar-item">
+          <a href="#" routerLink="/challenges">Challenges</a>
+        </div>
       </div>
       <div class="uk-navbar-right">
         <div *ngIf="auth.user$ | async as user; else showLogin">
           {{ user.name }}
-          <button class="uk-button" (click)="logout()">Logout</button>
+          <span *ngIf="user.admin">- <a href="#" routerLink="/admin">Admin</a></span>
+          - <a href="#" (click)="logout()">Déconnexion</a>
         </div>
         <ng-template #showLogin>
-          <button class="uk-button" (click)="login()">Login with Google</button>
+          <a href="#" (click)="login()">Se connecter avec Google</a>
         </ng-template>
       </div>
     </nav>
