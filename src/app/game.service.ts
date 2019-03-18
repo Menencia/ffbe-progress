@@ -9,10 +9,14 @@ export class GameService {
 
   constructor(public afs: AngularFirestore) { }
 
-  save(challenges: MyChallenge[], userUid: string) {
-    // @todo
-    // const mychallengeRef = this.afs.doc(`mychallenges/${userUid}`);
-    // const items = challenges.filter(challenge => challenge.done).map(challenge => challenge.export());
-    // mychallengeRef.set({items}, {merge: false});
+  save(mychallenges: MyChallenge[], userUid: string) {
+    const mychallengesRef = this.afs.doc(`users/${userUid}`).collection('mychallenges');
+    for (const mychallenge of mychallenges) {
+      if (mychallenge.changed && mychallenge.done) {
+        mychallengesRef.doc(mychallenge.challenge.uid).set(mychallenge.export());
+      } else if (mychallenge.changed && !mychallenge.done) {
+        mychallengesRef.doc(mychallenge.challenge.uid).delete();
+      }
+    }
   }
 }

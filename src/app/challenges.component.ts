@@ -56,6 +56,7 @@ export class ChallengesComponent implements OnInit {
         }))
       );
       mychallenges.subscribe(data => {
+        this.mychallenges = [];
         for (const challenge of this.challenges) {
           let done, nbMissions;
           const mychallenge = data.find(c => c.challenge === challenge.uid);
@@ -80,6 +81,8 @@ export class ChallengesComponent implements OnInit {
       c.done = true;
       c.nbMissions = nb;
     }
+    c.changed = true;
+    // TODO: save old value to identify it new value is different from old value
   }
 
   async save() {
