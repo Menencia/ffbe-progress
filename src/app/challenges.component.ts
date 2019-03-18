@@ -5,7 +5,7 @@ import { GameService } from './game.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Challenge } from './models/challenge';
 import { map, flatMap } from 'rxjs/operators';
-import { Observable, combineLatest  } from 'rxjs';
+import { Observable, combineLatest, of  } from 'rxjs';
 
 @Component({
   selector: 'app-challenges',
@@ -74,6 +74,9 @@ export class ChallengesComponent implements OnInit {
   }
 
   _getMyChallenges(user) {
+    if (!user) {
+      return of([]);
+    }
     const mychallengesRef = this.afs.doc(`users/${user.uid}`).collection('mychallenges');
     return mychallengesRef.snapshotChanges().pipe(
       map(actions => actions.map(a => {
