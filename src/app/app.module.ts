@@ -11,21 +11,29 @@ import { AuthService } from './auth.service';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login.component';
 import { ChallengesComponent } from './challenges.component';
+import { AdminComponent } from './admin/admin.component';
+import { AdminGuard } from './admin.guard';
+import { AppRoutingModule } from './app-routing/app-routing.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    ChallengesComponent
+    ChallengesComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
+    AppRoutingModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireAuthModule,
     AngularFirestoreModule
   ],
-  providers: [AuthService],
+  providers: [
+    AuthService,
+    AdminGuard
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

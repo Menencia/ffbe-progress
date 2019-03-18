@@ -4,7 +4,8 @@ import { MyChallenge } from './models/my_challenge';
 import { GameService } from './game.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Challenge } from './models/challenge';
-import { map } from 'rxjs/operators';
+import { map, flatMap } from 'rxjs/operators';
+import { Observable, combineLatest  } from 'rxjs';
 
 @Component({
   selector: 'app-challenges',
@@ -36,7 +37,7 @@ import { map } from 'rxjs/operators';
 })
 export class ChallengesComponent implements OnInit {
 
-  @Input() challenges: Challenge[];
+  challenges: Observable<Challenge[]>;
 
   mychallenges: MyChallenge[] = [];
 
@@ -47,30 +48,55 @@ export class ChallengesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.auth.user$.subscribe(user => {
-      const mychallengesRef = this.afs.doc(`users/${user.uid}`).collection('mychallenges');
-      const mychallenges = mychallengesRef.snapshotChanges().pipe(
-        map(actions => actions.map(a => {
-          const data = a.payload.doc.data();
-          return {...data};
-        }))
-      );
-      mychallenges.subscribe(data => {
-        this.mychallenges = [];
-        for (const challenge of this.challenges) {
-          let done, nbMissions;
-          const mychallenge = data.find(c => c.challenge === challenge.uid);
-          if (mychallenge) {
-            done = true;
-            nbMissions = mychallenge.nbMissions;
-          } else {
-            done = false;
-            nbMissions = 0;
-          }
-          this.mychallenges.push(new MyChallenge(challenge, done, nbMissions));
-        }
-      });
+    combineLatest([
+      this.getChallenges(),
+      this.getMyChallenges()
+    ]).subscribe(data => {
+      this._load(data[0], data[1]);
     });
+  }
+
+  getChallenges() {
+    const challengesRef = this.afs.collection<Challenge>('challenges');
+    return challengesRef.snapshotChanges().pipe(
+      map(actions => actions.map(a => {
+        const uid = a.payload.doc.id;
+        const data = a.payload.doc.data() as Challenge;
+        return {uid, ...data};
+      }))
+    );
+  }
+
+  getMyChallenges() {
+    return this.auth.user$.pipe(
+      flatMap(user => this._getMyChallenges(user))
+    );
+  }
+
+  _getMyChallenges(user) {
+    const mychallengesRef = this.afs.doc(`users/${user.uid}`).collection('mychallenges');
+    return mychallengesRef.snapshotChanges().pipe(
+      map(actions => actions.map(a => {
+        const data = a.payload.doc.data();
+        return {...data};
+      }))
+    );
+  }
+
+  _load(challenges, data) {
+    this.mychallenges = [];
+    for (const challenge of challenges) {
+      let done, nbMissions;
+      const mychallenge = data.find(c => c.challenge === challenge.uid);
+      if (mychallenge) {
+        done = true;
+        nbMissions = mychallenge.nbMissions;
+      } else {
+        done = false;
+        nbMissions = 0;
+      }
+      this.mychallenges.push(new MyChallenge(challenge, done, nbMissions));
+    }
   }
 
   markAsDone(c: MyChallenge, nb: number) {

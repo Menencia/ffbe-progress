@@ -6,4 +6,5 @@ export class Challenge {
   missions: boolean;
   points: number;
   category: Category;
+  position: number;
 }
