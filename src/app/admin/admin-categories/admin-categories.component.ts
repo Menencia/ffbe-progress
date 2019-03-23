@@ -8,25 +8,28 @@ import UIkit from 'uikit';
 @Component({
   selector: 'app-admin-categories',
   template: `
-    <div *ngFor="let category of categories">
-      {{ category.name.fr }} / {{ category.position }}
+    <div *ngFor="let c of categories">
+      {{ c.name.fr }} / {{ c.position }} (
+        <a (click)="modifyCategory(c)">modifier</a> |
+        <a (click)="deleteCategory(c)">supprimer</a>
+      )
     </div>
-    <a uk-toggle="target: #modal-close-default">Ajouter une catégorie</a>
+    <a (click)="addCategory()">Ajouter une catégorie</a>
 
     <!-- This is the modal with the default close button -->
     <div id="modal-close-default" uk-modal>
-      <div class="uk-modal-dialog uk-modal-body">
+      <div class="uk-modal-dialog uk-modal-body" *ngIf="category">
           <button class="uk-modal-close-default" type="button" uk-close></button>
-          <h2 class="uk-modal-title">Ajouter une catégorie</h2>
+          <h2 class="uk-modal-title">{{ title }}</h2>
           <p>
             <label for="name">Nom</label>
-            <input type="text" [(ngModel)]="this.category.name.fr" />
+            <input type="text" [(ngModel)]="category.name.fr" />
           </p>
           <p>
             <label for="position">Position</label>
-            <input type="number" [(ngModel)]="this.category.position" />
+            <input type="number" [(ngModel)]="category.position" />
           </p>
-          <p><button (click)="addCategory()">Valider</button></p>
+          <p><button (click)="_modifyCategory()">Valider</button></p>
       </div>
     </div>
   `,
@@ -36,7 +39,8 @@ export class AdminCategoriesComponent implements OnInit {
 
   public categories: Category[] = [];
 
-  public category: Category = new Category({fr: ''}, 1);
+  public title = 'test';
+  public category: Category;
 
   public categoriesRef: AngularFirestoreCollection;
 
@@ -64,23 +68,41 @@ export class AdminCategoriesComponent implements OnInit {
 
   _load(categories) {
     this.categories = [];
-    for (const category of categories) {
-      this.categories.push(new Category(category.name, category.position));
-      console.log(this.categories);
+    for (const c of categories) {
+      const category = new Category(c.uid, c.name, c.position);
+      this.categories.push(category);
     }
   }
 
   addCategory() {
+    this.category = new Category(null, {fr: ''}, 1);
+    UIkit.modal('#modal-close-default').show();
+  }
+
+  modifyCategory(category) {
+    this.category = category;
+    UIkit.modal('#modal-close-default').show();
+  }
+
+  _modifyCategory() {
     UIkit.modal('#modal-close-default').hide();
-    this.categoriesRef.add(this.category.export());
+    if (this.category.uid) {
+      this.afs.doc(`categories/${this.category.uid}`).update(this.category.export());
+    } else {
+      this.categoriesRef.add(this.category.export());
+    }
   }
 
-  modifycategory() {
-
-  }
-
-  deleteCategory() {
-
+  deleteCategory(category: Category) {
+    UIkit.modal.confirm('Confirmer?').then(
+      () => {
+        console.log(`delete: categories/${category.uid}`);
+        this.afs.doc(`categories/${category.uid}`).delete();
+      },
+      () => {
+        // do nothing
+      }
+    );
   }
 
 }

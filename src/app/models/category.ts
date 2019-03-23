@@ -3,7 +3,8 @@ export class Category {
   name: {fr: string};
   position: number;
 
-  constructor(name: {fr: string}, position) {
+  constructor(uid: string, name: {fr: string}, position: number) {
+    this.uid = uid;
     this.name = name;
     this.position = position;
   }
