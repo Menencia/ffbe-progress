@@ -6,23 +6,28 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Challenge } from './models/challenge';
 import { map, flatMap } from 'rxjs/operators';
 import { Observable, combineLatest, of  } from 'rxjs';
+import { Category } from './models/category';
+import { MyCategory } from './models/my_category';
 
 @Component({
   selector: 'app-challenges',
   template: `
-    <div *ngFor="let c of mychallenges">
-      <div uk-grid>
-        <div class="uk-width-1-2">{{c.challenge.label.fr}}</div>
-        <div class="uk-width-1-4">
-          <a class="uk-badge" [class.active]="c.done" (click)="markAsDone(c, 0)">Terminé</a>
-          <ng-container *ngIf="c.challenge.missions">
-            <a *ngFor="let m of [1, 2, 3]" class="uk-badge" [class.active]="m === c.nbMissions" (click)="markAsDone(c, m)">
-              {{m}}
-            </a>
-          </ng-container>
-        </div>
-        <div class="uk-width-1-4">
-          {{c.getPts()}}pts
+    <div *ngFor="let mycat of mycategories">
+      <strong>{{ mycat.category.name.fr }}</strong>
+      <div *ngFor="let mych of mycat.mychallenges">
+        <div uk-grid>
+          <div class="uk-width-1-2">{{ mych.challenge.label.fr }}</div>
+          <div class="uk-width-1-4">
+            <a class="uk-badge" [class.active]="mych.done" (click)="markAsDone(mych, 0)">Terminé</a>
+            <ng-container *ngIf="mych.challenge.missions">
+              <a *ngFor="let m of [1, 2, 3]" class="uk-badge" [class.active]="m === mych.nbMissions" (click)="markAsDone(mych, m)">
+                {{m}}
+              </a>
+            </ng-container>
+          </div>
+          <div class="uk-width-1-4">
+            {{ mych.getPts() }}pts
+          </div>
         </div>
       </div>
     </div>
@@ -37,9 +42,7 @@ import { Observable, combineLatest, of  } from 'rxjs';
 })
 export class ChallengesComponent implements OnInit {
 
-  challenges: Observable<Challenge[]>;
-
-  mychallenges: MyChallenge[] = [];
+  mycategories: MyCategory[] = [];
 
   constructor(
     public auth: AuthService,
@@ -50,21 +53,38 @@ export class ChallengesComponent implements OnInit {
   ngOnInit() {
     combineLatest([
       this.getChallenges(),
+      this.getCategories(),
       this.getMyChallenges()
     ]).subscribe(data => {
-      this._load(data[0], data[1]);
+      const [challenges, categories, mychallenges] = data;
+      this._load(challenges, categories, mychallenges);
     });
   }
 
   getChallenges() {
-    const challengesRef = this.afs.collection<Challenge>('challenges');
-    return challengesRef.snapshotChanges().pipe(
+    return this.afs
+    .collection<Challenge>('challenges')
+    .snapshotChanges()
+    .pipe(
       map(actions => actions.map(a => {
         const uid = a.payload.doc.id;
         const data = a.payload.doc.data() as Challenge;
         return {uid, ...data};
       }))
     );
+  }
+
+  getCategories() {
+    return this.afs
+      .collection<Challenge>('categories')
+      .snapshotChanges()
+      .pipe(
+        map(actions => actions.map(a => {
+          const uid = a.payload.doc.id;
+          const data = a.payload.doc.data() as Challenge;
+          return {uid, ...data};
+        }))
+      );
   }
 
   getMyChallenges() {
@@ -86,19 +106,29 @@ export class ChallengesComponent implements OnInit {
     );
   }
 
-  _load(challenges, data) {
-    this.mychallenges = [];
-    for (const challenge of challenges) {
-      let done, nbMissions;
-      const mychallenge = data.find(c => c.challenge === challenge.uid);
-      if (mychallenge) {
-        done = true;
-        nbMissions = mychallenge.nbMissions;
-      } else {
-        done = false;
-        nbMissions = 0;
+  _load(challenges, categories, mychallenges) {
+    let done, nbMissions;
+    this.mycategories = [];
+    for (const cat of categories) {
+      const category = new Category(cat.uid, cat.name, cat.position);
+      const mycategory = new MyCategory(category);
+      for (const ch of challenges) {
+        if (ch.category !== cat.uid) {
+          continue;
+        }
+        const challenge = new Challenge(ch.uid, ch.label, ch.missions, ch.points, ch.position, cat);
+        const mychallenge = mychallenges.find(c => c.challenge === challenge.uid);
+        if (mychallenge) {
+          done = true;
+          nbMissions = mychallenge.nbMissions;
+        } else {
+          done = false;
+          nbMissions = 0;
+        }
+        const mych = new MyChallenge(challenge, done, nbMissions);
+        mycategory.mychallenges.push(mych);
       }
-      this.mychallenges.push(new MyChallenge(challenge, done, nbMissions));
+      this.mycategories.push(mycategory);
     }
   }
 
@@ -116,7 +146,7 @@ export class ChallengesComponent implements OnInit {
 
   async save() {
     this.auth.user$.subscribe(user => {
-      this.game.save(this.mychallenges, user.uid);
+      this.game.save(this.mycategories, user.uid);
     });
   }
 
