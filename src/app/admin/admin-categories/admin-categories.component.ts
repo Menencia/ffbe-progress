@@ -8,16 +8,16 @@ import UIkit from 'uikit';
 @Component({
   selector: 'app-admin-categories',
   template: `
-    <div *ngFor="let c of categories">
-      {{ c.name.fr }} / {{ c.position }} (
-        <a (click)="modifyCategory(c)">modifier</a> |
-        <a (click)="deleteCategory(c)">supprimer</a>
+    <div *ngFor="let cat of categories">
+      {{ cat.name.fr }} / {{ cat.position }} (
+        <a (click)="modifyCategory(cat)">modifier</a> |
+        <a (click)="deleteCategory(cat)">supprimer</a>
       )
     </div>
     <a (click)="addCategory()">Ajouter une catégorie</a>
 
-    <!-- This is the modal with the default close button -->
-    <div id="modal-close-default" uk-modal>
+    <!-- MODAL category -->
+    <div id="modal-category" uk-modal>
       <div class="uk-modal-dialog uk-modal-body" *ngIf="category">
           <button class="uk-modal-close-default" type="button" uk-close></button>
           <h2 class="uk-modal-title">{{ title }}</h2>
@@ -39,7 +39,7 @@ export class AdminCategoriesComponent implements OnInit {
 
   public categories: Category[] = [];
 
-  public title = 'test';
+  public title = 'Cat';
   public category: Category;
 
   public categoriesRef: AngularFirestoreCollection;
@@ -68,24 +68,24 @@ export class AdminCategoriesComponent implements OnInit {
 
   _load(categories) {
     this.categories = [];
-    for (const c of categories) {
-      const category = new Category(c.uid, c.name, c.position);
+    for (const cat of categories) {
+      const category = new Category(cat.uid, cat.name, cat.position);
       this.categories.push(category);
     }
   }
 
   addCategory() {
     this.category = new Category(null, {fr: ''}, 1);
-    UIkit.modal('#modal-close-default').show();
+    UIkit.modal('#modal-category').show();
   }
 
   modifyCategory(category) {
     this.category = category;
-    UIkit.modal('#modal-close-default').show();
+    UIkit.modal('#modal-category').show();
   }
 
   _modifyCategory() {
-    UIkit.modal('#modal-close-default').hide();
+    UIkit.modal('#modal-category').hide();
     if (this.category.uid) {
       this.afs.doc(`categories/${this.category.uid}`).update(this.category.export());
     } else {
@@ -96,7 +96,6 @@ export class AdminCategoriesComponent implements OnInit {
   deleteCategory(category: Category) {
     UIkit.modal.confirm('Confirmer?').then(
       () => {
-        console.log(`delete: categories/${category.uid}`);
         this.afs.doc(`categories/${category.uid}`).delete();
       },
       () => {

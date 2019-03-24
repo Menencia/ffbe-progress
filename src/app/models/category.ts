@@ -1,3 +1,5 @@
+import { Challenge } from './challenge';
+
 export class Category {
   uid: string;
   name: {fr: string};
