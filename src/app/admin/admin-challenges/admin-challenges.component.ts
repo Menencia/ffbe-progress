@@ -9,18 +9,41 @@ import { Category } from 'src/app/models/category';
 @Component({
   selector: 'app-admin-challenges',
   template: `
-    <p><select [(ngModel)]="category" (change)="changeCategory()">
-      <option value="">Choisir une catégorie</option>
-      <option *ngFor="let cat of categories" [ngValue]="cat">{{ cat.name.fr }}</option>
-    </select></p>
-    <div *ngIf="category">
-      <div *ngFor="let ch of challenges">
-        {{ ch.label.fr }} / {{ ch.position }} (
-          <a (click)="modifyChallenge(ch)">modifier</a> |
-          <a (click)="deleteChallenge(ch)">supprimer</a>
-        )
+    <div class="uk-margin">
+      <label for="category">Catégorie : </label>
+      <div class="uk-inline">
+        <select [(ngModel)]="category" (change)="changeCategory()" class="uk-select">
+          <option *ngFor="let cat of categories" [ngValue]="cat">{{ cat.name.fr }}</option>
+        </select>
       </div>
-      <a (click)="addChallenge()">Ajouter un challenge</a>
+    </div>
+
+    <div *ngIf="category">
+      <table class="uk-table uk-table-divider">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Missions ?</th>
+            <th>Points</th>
+            <th>Position</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ch of challenges">
+            <td>{{ ch.label.fr }}</td>
+            <td>{{ ch.missions }}</td>
+            <td>{{ ch.points }}pts</td>
+            <td>{{ ch.position }}</td>
+            <td>
+              <a uk-icon="pencil" (click)="modifyChallenge(ch)"></a>
+              <a uk-icon="trash" (click)="deleteChallenge(ch)"></a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <a class="uk-button uk-button-default" (click)="addChallenge()">Ajouter un défi</a>
     </div>
 
     <!-- MODAL challenge -->

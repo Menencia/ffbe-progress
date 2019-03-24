@@ -8,13 +8,27 @@ import UIkit from 'uikit';
 @Component({
   selector: 'app-admin-categories',
   template: `
-    <div *ngFor="let cat of categories">
-      {{ cat.name.fr }} / {{ cat.position }} (
-        <a (click)="modifyCategory(cat)">modifier</a> |
-        <a (click)="deleteCategory(cat)">supprimer</a>
-      )
-    </div>
-    <a (click)="addCategory()">Ajouter une catégorie</a>
+    <table class="uk-table uk-table-divider">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Position</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cat of categories">
+          <td>{{ cat.name.fr }}</td>
+          <td>{{ cat.position }}</td>
+          <td>
+            <a uk-icon="pencil" (click)="modifyCategory(cat)"></a>
+            <a uk-icon="trash" (click)="deleteCategory(cat)"></a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <a class="uk-button uk-button-default" (click)="addCategory()">Ajouter une catégorie</a>
 
     <!-- MODAL category -->
     <div id="modal-category" uk-modal>

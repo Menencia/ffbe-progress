@@ -5,7 +5,9 @@ import { Component, OnInit } from '@angular/core';
   template: `
     <div>
       <app-login></app-login>
-      <router-outlet></router-outlet>
+      <div class="uk-container">
+        <router-outlet></router-outlet>
+      </div>
     </div>
   `,
   styles: []

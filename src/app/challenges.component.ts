@@ -5,7 +5,7 @@ import { GameService } from './game.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Challenge } from './models/challenge';
 import { map, flatMap } from 'rxjs/operators';
-import { Observable, combineLatest, of  } from 'rxjs';
+import { combineLatest, of  } from 'rxjs';
 import { Category } from './models/category';
 import { MyCategory } from './models/my_category';
 
@@ -13,23 +13,32 @@ import { MyCategory } from './models/my_category';
   selector: 'app-challenges',
   template: `
     <div *ngFor="let mycat of mycategories">
-      <strong>{{ mycat.category.name.fr }}</strong>
-      <div *ngFor="let mych of mycat.mychallenges">
-        <div uk-grid>
-          <div class="uk-width-1-2">{{ mych.challenge.label.fr }}</div>
-          <div class="uk-width-1-4">
-            <a class="uk-badge" [class.active]="mych.done" (click)="markAsDone(mych, 0)">Terminé</a>
-            <ng-container *ngIf="mych.challenge.missions">
-              <a *ngFor="let m of [1, 2, 3]" class="uk-badge" [class.active]="m === mych.nbMissions" (click)="markAsDone(mych, m)">
-                {{m}}
-              </a>
-            </ng-container>
-          </div>
-          <div class="uk-width-1-4">
-            {{ mych.getPts() }}pts
-          </div>
-        </div>
-      </div>
+      <h2 class="uk-heading-bullet">{{ mycat.category.name.fr }}</h2>
+
+      <table class="uk-table uk-table-divider">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Terminé ?</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let mych of mycat.mychallenges">
+            <td>{{ mych.challenge.label.fr }}</td>
+            <td>
+              <a class="uk-badge" [class.active]="mych.done" (click)="markAsDone(mych, 0)">Terminé</a>
+              <ng-container *ngIf="mych.challenge.missions">
+                <a *ngFor="let m of [1, 2, 3]" class="uk-badge" [class.active]="m === mych.nbMissions" (click)="markAsDone(mych, m)">
+                  {{m}}
+                </a>
+              </ng-container>
+            </td>
+            <td>{{ mych.getPts() }}pts</td>
+          </tr>
+        </tbody>
+      </table>
+
     </div>
     <button class="uk-button uk-align-center" (click)="save()" *ngIf="auth.user$ | async">Sauvegarder</button>
     `,
