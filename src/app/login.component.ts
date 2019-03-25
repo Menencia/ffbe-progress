@@ -42,7 +42,7 @@ import { AuthService } from './auth.service';
           </ul>
         </div>
         <ng-template #showLogin>
-          <a class="uk-button uk-button-primary" href="#" (click)="login()">
+          <a class="uk-button uk-button-primary" href="javascript:void(0)" (click)="login()">
             <span class="uk-icon uk-margin-small-right" uk-icon="icon: sign-in"></span>
             Se connecter avec Google
           </a>
