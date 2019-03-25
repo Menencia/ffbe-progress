@@ -71,8 +71,9 @@ export class ChallengesComponent implements OnInit {
   }
 
   getChallenges() {
+    const options = ref => ref.orderBy('position', 'asc');
     return this.afs
-    .collection<Challenge>('challenges')
+    .collection<Challenge>('challenges', options)
     .snapshotChanges()
     .pipe(
       map(actions => actions.map(a => {
@@ -84,8 +85,9 @@ export class ChallengesComponent implements OnInit {
   }
 
   getCategories() {
+    const options = ref => ref.orderBy('position', 'asc');
     return this.afs
-      .collection<Challenge>('categories')
+      .collection<Challenge>('categories', options)
       .snapshotChanges()
       .pipe(
         map(actions => actions.map(a => {

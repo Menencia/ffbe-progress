@@ -134,7 +134,9 @@ export class AdminChallengesComponent implements OnInit {
   }
 
   _getChallenges() {
-    const options = ref => ref.where('category', '==', this.category.uid);
+    const options = ref => ref
+      .where('category', '==', this.category.uid)
+      .orderBy('position', 'asc');
     return this.afs
       .collection(`challenges`, options)
       .snapshotChanges()

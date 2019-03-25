@@ -108,6 +108,7 @@ export class AdminCategoriesComponent implements OnInit {
   }
 
   deleteCategory(category: Category) {
+    // TODO check if the category is empty
     UIkit.modal.confirm('Confirmer?').then(
       () => {
         this.afs.doc(`categories/${category.uid}`).delete();
