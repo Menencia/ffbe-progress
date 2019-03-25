@@ -8,18 +8,40 @@ import { MyCategory } from './models/my_category';
 })
 export class GameService {
 
+  total = 0;
+
+  callback: Function;
+
   constructor(public afs: AngularFirestore) { }
 
-  save(mycategories: MyCategory[], userUid: string) {
+  save(toSet, toDelete, userUid: string, callback: Function) {
+
+    this.total = toSet.length + toDelete.length;
+
+    this.callback = callback;
+
     const mychallengesRef = this.afs.doc(`users/${userUid}`).collection('mychallenges');
-    for (const mycategory of mycategories) {
-      for (const mychallenge of mycategory.mychallenges) {
-        if (mychallenge.changed && mychallenge.done) {
-          mychallengesRef.doc(mychallenge.challenge.uid).set(mychallenge.export());
-        } else if (mychallenge.changed && !mychallenge.done) {
-          mychallengesRef.doc(mychallenge.challenge.uid).delete();
-        }
-      }
+    for (const mychallenge of toSet) {
+      mychallengesRef
+        .doc(mychallenge.challenge)
+        .set(mychallenge)
+        .then(() => this.updateTotal())
+        .catch(() => this.updateTotal());
+    }
+    for (const mychallenge of toDelete) {
+      mychallengesRef
+        .doc(mychallenge.challenge)
+        .delete()
+        .then(() => this.updateTotal())
+        .catch(() => this.updateTotal());
+    }
+  }
+
+  updateTotal() {
+    this.total -= 1;
+
+    if (this.total === 0) {
+      this.callback();
     }
   }
 }

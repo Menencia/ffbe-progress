@@ -12,35 +12,52 @@ import { MyCategory } from './models/my_category';
 @Component({
   selector: 'app-challenges',
   template: `
-    <div *ngFor="let mycat of mycategories">
-      <h2 class="uk-heading-bullet">{{ mycat.category.name.fr }}</h2>
-
-      <table class="uk-table uk-table-divider">
-        <thead>
-          <tr>
-            <th>Nom</th>
-            <th>Terminé ?</th>
-            <th>Points</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let mych of mycat.mychallenges">
-            <td>{{ mych.challenge.label.fr }}</td>
-            <td>
-              <a class="uk-badge" [class.active]="mych.done" (click)="markAsDone(mych, 0)">Terminé</a>
-              <ng-container *ngIf="mych.challenge.missions">
-                <a *ngFor="let m of [1, 2, 3]" class="uk-badge" [class.active]="m === mych.nbMissions" (click)="markAsDone(mych, m)">
-                  {{m}}
-                </a>
-              </ng-container>
-            </td>
-            <td>{{ mych.getPts() }}pts</td>
-          </tr>
-        </tbody>
-      </table>
-
+    <div uk-grid>
+      <div class="uk-width-auto@m">
+          <ul class="uk-tab-left" uk-tab="connect: #component-tab-left; animation: uk-animation-fade">
+            <li *ngFor="let mycat of mycategories"><a href="#">{{ mycat.category.name.fr }}</a></li>
+          </ul>
+          <button class="uk-button uk-align-center"
+            (click)="save()"
+            [class.uk-button-primary]="isSavePrimary"
+            *ngIf="auth.user$ | async">
+            <span uk-icon="icon: upload" *ngIf="!isSaveLoading"></span>
+            <span uk-spinner="ratio: 0.5" *ngIf="isSaveLoading"></span>
+            Sauvegarder</button>
+      </div>
+      <div class="uk-width-expand@m">
+          <ul id="component-tab-left" class="uk-switcher">
+              <li *ngFor="let mycat of mycategories">
+                <table class="uk-table uk-table-divider">
+                  <thead>
+                    <tr>
+                      <th>Nom</th>
+                      <th>Terminé ?</th>
+                      <th>Points</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let mych of mycat.mychallenges">
+                      <td>{{ mych.challenge.label.fr }}</td>
+                      <td>
+                        <a class="uk-badge" [class.active]="mych.done" (click)="markAsDone(mych, 0)">Terminé</a>
+                        <ng-container *ngIf="mych.challenge.missions">
+                          <a *ngFor="let m of [1, 2, 3]"
+                            class="uk-badge"
+                            [class.active]="m <= mych.nbMissions"
+                            (click)="markAsDone(mych, m)">
+                            {{m}}
+                          </a>
+                        </ng-container>
+                      </td>
+                      <td>{{ mych.getPts() }}pts</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </li>
+          </ul>
+      </div>
     </div>
-    <button class="uk-button uk-align-center" (click)="save()" *ngIf="auth.user$ | async">Sauvegarder</button>
     `,
   styles: [`
     .active {
@@ -52,6 +69,11 @@ import { MyCategory } from './models/my_category';
 export class ChallengesComponent implements OnInit {
 
   mycategories: MyCategory[] = [];
+
+  mychallenges;
+
+  isSavePrimary = false;
+  isSaveLoading = false;
 
   constructor(
     public auth: AuthService,
@@ -140,6 +162,9 @@ export class ChallengesComponent implements OnInit {
         mycategory.mychallenges.push(mych);
       }
       this.mycategories.push(mycategory);
+
+      // save original mychallenges
+      this.mychallenges = mychallenges;
     }
   }
 
@@ -152,12 +177,56 @@ export class ChallengesComponent implements OnInit {
       c.nbMissions = nb;
     }
     c.changed = true;
-    // TODO: save old value to identify it new value is different from old value
+    this.checkChanges();
+  }
+
+  /**
+   * {challenge, nbMissions}
+   */
+  checkChanges() {
+    const toSet = [];
+    const toDelete = [];
+    const A = this.mychallenges;
+    const B = this.buildMyChallenges();
+
+    for (const e of B) {
+      const found = A.find(f => f.challenge === e.challenge);
+      if (!found || found.nbMissions !== e.nbMissions) {
+        toSet.push(e);
+      }
+    }
+
+    for (const e of A) {
+      const found = B.find(f => f.challenge === e.challenge);
+      if (!found) {
+        toDelete.push(e);
+      }
+    }
+
+    this.isSavePrimary = toSet.length !== 0 || toDelete.length !== 0;
+    return [toSet, toDelete];
+  }
+
+  buildMyChallenges() {
+    const res = [];
+    for (const mycategory of this.mycategories) {
+      for (const mychallenge of mycategory.mychallenges) {
+        if (mychallenge.done) {
+          res.push(mychallenge.export());
+        }
+      }
+    }
+    return res;
   }
 
   async save() {
+    const [toSet, toDelete] = this.checkChanges();
+    this.isSaveLoading = true;
     this.auth.user$.subscribe(user => {
-      this.game.save(this.mycategories, user.uid);
+      this.game.save(toSet, toDelete, user.uid, () => {
+        this.isSavePrimary = false;
+        this.isSaveLoading = false;
+      });
     });
   }
 
