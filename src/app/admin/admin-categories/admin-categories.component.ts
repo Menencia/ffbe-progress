@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, QueryFn } from '@angular/fire/firestore';
 import { Category } from 'src/app/models/category';
 import { map, } from 'rxjs/operators';
@@ -49,7 +49,7 @@ import UIkit from 'uikit';
   `,
   styles: []
 })
-export class AdminCategoriesComponent implements OnInit {
+export class AdminCategoriesComponent implements OnInit, OnDestroy {
 
   public categories: Category[] = [];
 
@@ -66,6 +66,10 @@ export class AdminCategoriesComponent implements OnInit {
     ]).subscribe((data) => {
       this._load(data[0]);
     });
+  }
+
+  ngOnDestroy() {
+    document.getElementById('modal-category').remove();
   }
 
   _getCategories() {

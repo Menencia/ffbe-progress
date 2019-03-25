@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, QueryFn } from '@angular/fire/firestore';
 import { map, } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
@@ -77,7 +77,7 @@ import { Category } from 'src/app/models/category';
   `,
   styles: []
 })
-export class AdminChallengesComponent implements OnInit {
+export class AdminChallengesComponent implements OnInit, OnDestroy {
 
   public categories: Category[];
   public category: Category;
@@ -97,6 +97,10 @@ export class AdminChallengesComponent implements OnInit {
     ]).subscribe((data) => {
       this._load(data[0]);
     });
+  }
+
+  ngOnDestroy() {
+    document.getElementById('modal-challenge').remove();
   }
 
   _getCategories() {
