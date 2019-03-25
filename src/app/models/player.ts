@@ -1,8 +1,8 @@
-import { Title } from './title';
 import { User } from './user';
+import { Rank } from './rank';
 
 export class Player {
   user: User;
   points: number;
-  title: Title;
+  rank: Rank;
 }

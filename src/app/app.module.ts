@@ -17,6 +17,7 @@ import { AdminGuard } from './admin.guard';
 import { AppRoutingModule } from './app-routing/app-routing.module';
 import { AdminCategoriesComponent } from './admin/admin-categories/admin-categories.component';
 import { AdminChallengesComponent } from './admin/admin-challenges/admin-challenges.component';
+import { AdminRanksComponent } from './admin/admin-ranks/admin-ranks.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { AdminChallengesComponent } from './admin/admin-challenges/admin-challen
     ChallengesComponent,
     AdminComponent,
     AdminCategoriesComponent,
-    AdminChallengesComponent
+    AdminChallengesComponent,
+    AdminRanksComponent
   ],
   imports: [
     BrowserModule,
