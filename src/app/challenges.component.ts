@@ -23,6 +23,10 @@ import { Rank } from './models/rank';
             <span class="uk-badge">{{ totalPoints }}pts</span>
           </div>
 
+          <div class="uk-text-center uk-text-bold">
+            <span class="" *ngIf="rank">{{ rank.label.fr }}</span>
+          </div>
+
           <button class="uk-button uk-align-center"
             (click)="save()"
             [class.uk-button-primary]="isSavePrimary"
@@ -82,6 +86,7 @@ export class ChallengesComponent implements OnInit {
   isSaveLoading = false;
 
   totalPoints: number;
+  rank: Rank;
 
   constructor(
     public auth: AuthService,
@@ -197,8 +202,9 @@ export class ChallengesComponent implements OnInit {
     // save original mychallenges
     this.mychallenges = mychallenges;
 
-    // refresh total points
+    // refresh total points & rank
     this.countTotalPoints();
+    this.refreshRank();
   }
 
   markAsDone(c: MyChallenge, nb: number) {
@@ -212,6 +218,7 @@ export class ChallengesComponent implements OnInit {
     c.changed = true;
     this.checkChanges();
     this.countTotalPoints();
+    this.refreshRank();
   }
 
   /**
@@ -263,6 +270,17 @@ export class ChallengesComponent implements OnInit {
     }
 
     this.totalPoints = pts;
+  }
+
+  refreshRank() {
+    let rank = null;
+    let i = 0;
+    while(this.totalPoints >= this.ranks[i].points) {
+      i += 1;
+      rank = this.ranks[i];
+    }
+    console.log(rank);
+    this.rank = rank;
   }
 
   async save() {
