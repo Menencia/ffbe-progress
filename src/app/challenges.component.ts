@@ -24,7 +24,7 @@ import { Rank } from './models/rank';
           </div>
 
           <div class="uk-text-center uk-text-bold">
-            <span class="" *ngIf="rank">{{ rank.label.fr }}</span>
+            <span class="" *ngIf="rank">Nv{{ rank.level }}. {{ rank.label.fr }}</span>
           </div>
 
           <button class="uk-button uk-align-center"
@@ -279,7 +279,6 @@ export class ChallengesComponent implements OnInit {
       i += 1;
       rank = this.ranks[i];
     }
-    console.log(rank);
     this.rank = rank;
   }
 
