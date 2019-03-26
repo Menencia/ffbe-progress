@@ -75,7 +75,10 @@ export class AdminRanksComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    document.getElementById('modal-rank').remove();
+    const modal = document.getElementById('modal-rank');
+    if (modal) {
+      modal.remove();
+    }
   }
 
   _getRanks() {

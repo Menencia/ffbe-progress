@@ -100,7 +100,10 @@ export class AdminChallengesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    document.getElementById('modal-challenge').remove();
+    const modal = document.getElementById('modal-challenge');
+    if (modal) {
+      modal.remove();
+    }
   }
 
   _getCategories() {

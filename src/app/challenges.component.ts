@@ -8,6 +8,7 @@ import { map, flatMap } from 'rxjs/operators';
 import { combineLatest, of  } from 'rxjs';
 import { Category } from './models/category';
 import { MyCategory } from './models/my_category';
+import { Rank } from './models/rank';
 
 @Component({
   selector: 'app-challenges',
@@ -69,7 +70,7 @@ import { MyCategory } from './models/my_category';
 export class ChallengesComponent implements OnInit {
 
   mycategories: MyCategory[] = [];
-
+  ranks: Rank[] = [];
   mychallenges;
 
   isSavePrimary = false;
@@ -85,10 +86,11 @@ export class ChallengesComponent implements OnInit {
     combineLatest([
       this.getChallenges(),
       this.getCategories(),
+      this.getRanks(),
       this.getMyChallenges()
     ]).subscribe(data => {
-      const [challenges, categories, mychallenges] = data;
-      this._load(challenges, categories, mychallenges);
+      const [challenges, categories, ranks, mychallenges] = data;
+      this._load(challenges, categories, ranks, mychallenges);
     });
   }
 
@@ -120,6 +122,20 @@ export class ChallengesComponent implements OnInit {
       );
   }
 
+  getRanks() {
+    const options = ref => ref.orderBy('level', 'asc');
+    return this.afs
+      .collection<Rank>('ranks', options)
+      .snapshotChanges()
+      .pipe(
+        map(actions => actions.map(a => {
+          const uid = a.payload.doc.id;
+          const data = a.payload.doc.data() as Rank;
+          return {uid, ...data};
+        }))
+      );
+  }
+
   getMyChallenges() {
     return this.auth.user$.pipe(
       flatMap(user => this._getMyChallenges(user))
@@ -139,7 +155,8 @@ export class ChallengesComponent implements OnInit {
     );
   }
 
-  _load(challenges, categories, mychallenges) {
+  _load(challenges, categories, ranks, mychallenges) {
+    // challenges & categories
     let done, nbMissions;
     this.mycategories = [];
     for (const cat of categories) {
@@ -162,10 +179,17 @@ export class ChallengesComponent implements OnInit {
         mycategory.mychallenges.push(mych);
       }
       this.mycategories.push(mycategory);
-
-      // save original mychallenges
-      this.mychallenges = mychallenges;
     }
+
+    // ranks
+    for (const r of ranks) {
+      const rank = new Rank(r.uid, r.label, r.level, r.points);
+      this.ranks.push(rank);
+    }
+    console.log(this.ranks);
+
+    // save original mychallenges
+    this.mychallenges = mychallenges;
   }
 
   markAsDone(c: MyChallenge, nb: number) {

@@ -69,7 +69,10 @@ export class AdminCategoriesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    document.getElementById('modal-category').remove();
+    const modal = document.getElementById('modal-category');
+    if (modal) {
+      modal.remove();
+    }
   }
 
   _getCategories() {
