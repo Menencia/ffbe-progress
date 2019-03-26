@@ -18,6 +18,11 @@ import { Rank } from './models/rank';
           <ul class="uk-tab-left" uk-tab="connect: #component-tab-left; animation: uk-animation-fade">
             <li *ngFor="let mycat of mycategories"><a href="#">{{ mycat.category.name.fr }}</a></li>
           </ul>
+
+          <div class="uk-text-center uk-text-bold uk-heading-line">
+            <span class="uk-badge">{{ totalPoints }}pts</span>
+          </div>
+
           <button class="uk-button uk-align-center"
             (click)="save()"
             [class.uk-button-primary]="isSavePrimary"
@@ -75,6 +80,8 @@ export class ChallengesComponent implements OnInit {
 
   isSavePrimary = false;
   isSaveLoading = false;
+
+  totalPoints: number;
 
   constructor(
     public auth: AuthService,
@@ -186,10 +193,12 @@ export class ChallengesComponent implements OnInit {
       const rank = new Rank(r.uid, r.label, r.level, r.points);
       this.ranks.push(rank);
     }
-    console.log(this.ranks);
 
     // save original mychallenges
     this.mychallenges = mychallenges;
+
+    // refresh total points
+    this.countTotalPoints();
   }
 
   markAsDone(c: MyChallenge, nb: number) {
@@ -202,6 +211,7 @@ export class ChallengesComponent implements OnInit {
     }
     c.changed = true;
     this.checkChanges();
+    this.countTotalPoints();
   }
 
   /**
@@ -241,6 +251,18 @@ export class ChallengesComponent implements OnInit {
       }
     }
     return res;
+  }
+
+  countTotalPoints() {
+    let pts = 0;
+
+    for (const mycat of this.mycategories) {
+      for (const mych of mycat.mychallenges) {
+        pts += mych.getPts();
+      }
+    }
+
+    this.totalPoints = pts;
   }
 
   async save() {
