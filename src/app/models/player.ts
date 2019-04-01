@@ -5,4 +5,5 @@ export class Player {
   user: User;
   points: number;
   rank: Rank;
+  date: Date;
 }

@@ -19,6 +19,7 @@ import { AdminCategoriesComponent } from './admin/admin-categories/admin-categor
 import { AdminChallengesComponent } from './admin/admin-challenges/admin-challenges.component';
 import { AdminRanksComponent } from './admin/admin-ranks/admin-ranks.component';
 import { PlayerComponent } from './player/player.component';
+import { RankingComponent } from './ranking/ranking.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { PlayerComponent } from './player/player.component';
     AdminCategoriesComponent,
     AdminChallengesComponent,
     AdminRanksComponent,
-    PlayerComponent
+    PlayerComponent,
+    RankingComponent
   ],
   imports: [
     BrowserModule,

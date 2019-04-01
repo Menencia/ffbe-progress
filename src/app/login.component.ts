@@ -12,9 +12,15 @@ import { AuthService } from './auth.service';
 
         <ul class="uk-navbar-nav">
           <li>
-            <a href="#" routerLink="/challenges">
+            <a href="#" routerLink="/mychallenges">
               <span class="uk-icon uk-margin-small-right" uk-icon="icon: star"></span>
               Défis
+            </a>
+          </li>
+          <li>
+            <a href="#" routerLink="/ranking">
+              <span class="uk-icon uk-margin-small-right" uk-icon="icon: users"></span>
+              Classement
             </a>
           </li>
         </ul>
