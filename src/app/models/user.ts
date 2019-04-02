@@ -5,4 +5,8 @@ export class User {
   admin: boolean;
   lastConnected: Date;
   banned: boolean;
+
+  // ranking
+  points: number;
+  dateRanking: Date;
 }

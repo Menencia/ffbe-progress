@@ -4,7 +4,7 @@ import { MyChallenge } from './models/my_challenge';
 import { GameService } from './game.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Challenge } from './models/challenge';
-import { map, flatMap } from 'rxjs/operators';
+import { map, flatMap, take } from 'rxjs/operators';
 import { combineLatest, of  } from 'rxjs';
 import { Category } from './models/category';
 import { MyCategory } from './models/my_category';
@@ -254,11 +254,10 @@ export class ChallengesComponent implements OnInit {
   async save() {
     const [toSet, toDelete] = this.checkChanges();
     this.isSaveLoading = true;
-    this.auth.user$.subscribe(user => {
-      this.game.save(toSet, toDelete, user.uid, this.totalPoints, () => {
-        this.isSavePrimary = false;
-        this.isSaveLoading = false;
-      });
+    const user = await this.auth.user$.pipe(take(1)).toPromise();
+    this.game.save(toSet, toDelete, user, this.totalPoints, () => {
+      this.isSavePrimary = false;
+      this.isSaveLoading = false;
     });
   }
 

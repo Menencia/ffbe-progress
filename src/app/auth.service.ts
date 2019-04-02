@@ -54,7 +54,9 @@ export class AuthService {
       email: user.email,
       admin: false,
       lastConnected: moment().toDate(),
-      banned: false
+      banned: false,
+      points: null,
+      dateRanking: null
     };
 
     return userRef.set(data, { merge: true });

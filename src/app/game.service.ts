@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { DataService } from './data.service';
+import { User } from './models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -13,13 +14,13 @@ export class GameService {
 
   constructor(public afs: AngularFirestore, public data: DataService) { }
 
-  save(toSet, toDelete, userUid: string, points, callback: Function) {
+  save(toSet, toDelete, user: User, points, callback: Function) {
 
     this.total = toSet.length + toDelete.length;
 
     this.callback = callback;
 
-    const mychallengesRef = this.afs.doc(`users/${userUid}`).collection('mychallenges');
+    const mychallengesRef = this.afs.doc(`users/${user.uid}`).collection('mychallenges');
     for (const mychallenge of toSet) {
       mychallengesRef
         .doc(mychallenge.challenge)
@@ -36,10 +37,10 @@ export class GameService {
     }
 
     // save to /players
-    this.afs.doc(`players/${userUid}`).set({
+    this.afs.doc(`users/${user.uid}`).set({
       points: points,
-      date: new Date()
-    });
+      dateRanking: new Date()
+    }, { merge: true });
   }
 
   updateTotal() {
