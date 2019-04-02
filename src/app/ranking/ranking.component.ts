@@ -1,7 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Player } from '../models/player';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { map } from 'rxjs/operators';
 import { DataService } from '../data.service';
 import { User } from '../models/user';
 
@@ -9,9 +6,22 @@ import { User } from '../models/user';
   selector: 'app-ranking',
   template: `
     <h1>Classement</h1>
-    <div *ngFor="let user of users">
-      {{ user.name }} / {{ user.points }}
-    </div>
+    <table class="uk-table uk-table-divider">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Points</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td><a [routerLink]="'/player/' + user.uid">{{ user.name }}</a></td>
+          <td>{{ user.points }}pts</td>
+          <td>{{ user.dateRanking.toDate() | date:'mediumDate' }}</td>
+        </tr>
+      </tbody>
+    </table>
   `,
   styles: []
 })

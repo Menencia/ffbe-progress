@@ -1,3 +1,6 @@
+import {firestore} from 'firebase/app';
+import Timestamp = firestore.Timestamp;
+
 export class User {
   uid: string;
   name: string;
@@ -8,5 +11,5 @@ export class User {
 
   // ranking
   points: number;
-  dateRanking: Date;
+  dateRanking: Timestamp;
 }

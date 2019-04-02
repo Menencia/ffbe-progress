@@ -13,7 +13,7 @@ const appRoutes: Routes = [
   { path: 'ranking', component: RankingComponent },
   { path: 'player/:id', component: PlayerComponent },
   { path: 'admin', component: AdminComponent, canActivate: [AdminGuard] },
-  { path: '', redirectTo: '/challenges', pathMatch: 'full' },
+  { path: '', redirectTo: '/mychallenges', pathMatch: 'full' },
 ];
 
 @NgModule({
