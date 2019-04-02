@@ -20,6 +20,14 @@ import { AdminChallengesComponent } from './admin/admin-challenges/admin-challen
 import { AdminRanksComponent } from './admin/admin-ranks/admin-ranks.component';
 import { PlayerComponent } from './player/player.component';
 import { RankingComponent } from './ranking/ranking.component';
+import { LocalizedDatePipe } from './localized-date.pipe';
+
+import { TranslateModule } from '@ngx-translate/core';
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+
+// the second parameter 'fr' is optional
+registerLocaleData(localeFr, 'fr');
 
 @NgModule({
   declarations: [
@@ -31,13 +39,15 @@ import { RankingComponent } from './ranking/ranking.component';
     AdminChallengesComponent,
     AdminRanksComponent,
     PlayerComponent,
-    RankingComponent
+    RankingComponent,
+    LocalizedDatePipe
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
     AppRoutingModule,
+    TranslateModule.forRoot(),
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireAuthModule,
     AngularFirestoreModule

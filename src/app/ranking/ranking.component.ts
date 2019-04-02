@@ -18,7 +18,7 @@ import { User } from '../models/user';
         <tr *ngFor="let user of users">
           <td><a [routerLink]="'/player/' + user.uid">{{ user.name }}</a></td>
           <td>{{ user.points }}pts</td>
-          <td>{{ user.dateRanking.toDate() | date:'mediumDate' }}</td>
+          <td>{{ user.dateRanking.toDate() | localizedDate }}</td>
         </tr>
       </tbody>
     </table>
