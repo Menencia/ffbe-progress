@@ -9,6 +9,7 @@ import { combineLatest, of  } from 'rxjs';
 import { Category } from './models/category';
 import { MyCategory } from './models/my_category';
 import { Rank } from './models/rank';
+import { DataService } from './data.service';
 
 @Component({
   selector: 'app-challenges',
@@ -91,6 +92,7 @@ export class ChallengesComponent implements OnInit {
   constructor(
     public auth: AuthService,
     public game: GameService,
+    public data: DataService,
     public afs: AngularFirestore,
   ) { }
 
@@ -108,44 +110,17 @@ export class ChallengesComponent implements OnInit {
 
   getChallenges() {
     const options = ref => ref.orderBy('position', 'asc');
-    return this.afs
-    .collection<Challenge>('challenges', options)
-    .snapshotChanges()
-    .pipe(
-      map(actions => actions.map(a => {
-        const uid = a.payload.doc.id;
-        const data = a.payload.doc.data() as Challenge;
-        return {uid, ...data};
-      }))
-    );
+    return this.data.collection('challenges', options);
   }
 
   getCategories() {
     const options = ref => ref.orderBy('position', 'asc');
-    return this.afs
-      .collection<Challenge>('categories', options)
-      .snapshotChanges()
-      .pipe(
-        map(actions => actions.map(a => {
-          const uid = a.payload.doc.id;
-          const data = a.payload.doc.data() as Challenge;
-          return {uid, ...data};
-        }))
-      );
+    return this.data.collection('categories', options);
   }
 
   getRanks() {
     const options = ref => ref.orderBy('level', 'asc');
-    return this.afs
-      .collection<Rank>('ranks', options)
-      .snapshotChanges()
-      .pipe(
-        map(actions => actions.map(a => {
-          const uid = a.payload.doc.id;
-          const data = a.payload.doc.data() as Rank;
-          return {uid, ...data};
-        }))
-      );
+    return this.data.collection('ranks', options);
   }
 
   getMyChallenges() {
@@ -158,13 +133,7 @@ export class ChallengesComponent implements OnInit {
     if (!user) {
       return of([]);
     }
-    const mychallengesRef = this.afs.doc(`users/${user.uid}`).collection('mychallenges');
-    return mychallengesRef.snapshotChanges().pipe(
-      map(actions => actions.map(a => {
-        const data = a.payload.doc.data();
-        return {...data};
-      }))
-    );
+    return this.data.collection(`users/${user.uid}/mychallenges`);
   }
 
   _load(challenges, categories, ranks, mychallenges) {
@@ -286,7 +255,7 @@ export class ChallengesComponent implements OnInit {
     const [toSet, toDelete] = this.checkChanges();
     this.isSaveLoading = true;
     this.auth.user$.subscribe(user => {
-      this.game.save(toSet, toDelete, user.uid, () => {
+      this.game.save(toSet, toDelete, user.uid, this.totalPoints, () => {
         this.isSavePrimary = false;
         this.isSaveLoading = false;
       });
