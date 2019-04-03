@@ -5,7 +5,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 
 import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 
 import { User } from './models/user';
 
@@ -18,6 +18,8 @@ export class AuthService {
 
   user$: Observable<User>;
 
+  userRef: AngularFirestoreDocument<any>;
+
   constructor(
     public afAuth: AngularFireAuth,
     public afs: AngularFirestore
@@ -25,7 +27,8 @@ export class AuthService {
     this.user$ = this.afAuth.authState.pipe(
       switchMap(user => {
         if (user) {
-          return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
+          this.userRef = this.afs.doc<User>(`users/${user.uid}`);
+          return this.userRef.valueChanges();
         } else {
           return of(null);
         }
@@ -46,8 +49,6 @@ export class AuthService {
 
   private updateUser(user) {
 
-    const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
-
     const userObj: User = new User({
       uid: user.uid,
       name: user.displayName,
@@ -55,6 +56,12 @@ export class AuthService {
       lastConnected: moment().toDate()
     });
 
-    return userRef.set(userObj.export(), { merge: true });
+    return this.userRef.set(userObj.export(), { merge: true });
+  }
+
+  saveDisplayName(displayName) {
+
+    return this.userRef.set({displayName}, { merge: true });
+
   }
 }
