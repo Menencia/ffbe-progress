@@ -16,7 +16,7 @@ import { User } from '../models/user';
       </thead>
       <tbody>
         <tr *ngFor="let user of users">
-          <td><a [routerLink]="'/player/' + user.uid">{{ user.name }}</a></td>
+          <td><a [routerLink]="'/player/' + user.uid">{{ user.getName() }}</a></td>
           <td>{{ user.points }}pts</td>
           <td>{{ user.dateRanking.toDate() | localizedDate }}</td>
         </tr>
@@ -34,8 +34,13 @@ export class RankingComponent implements OnInit {
   ngOnInit() {
     const options = ref => ref.orderBy('points', 'desc');
     this.data.collection('users', options)
-      .subscribe((data) => {
-        this.users = data as User[];
+      .subscribe((users: User[]) => {
+        this.users = [];
+        for (const userData of users) {
+          if (userData.points) {
+            this.users.push(new User(userData));
+          }
+        }
       });
   }
 
