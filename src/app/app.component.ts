@@ -19,21 +19,26 @@ import UIkit from 'uikit';
       <div class="uk-modal-dialog uk-modal-body" *ngIf="user">
           <button class="uk-modal-close-default" type="button" uk-close></button>
           <h2 class="uk-modal-title">Bienvenue</h2>
-          <p>Merci de vous êtes connecté au site.<br />Pour commencer, veuillez définir votre pseudo.</p>
-          <form class="uk-form-horizontal uk-margin-large">
-            <div class="uk-margin">
-                <label class="uk-form-label" for="form-horizontal-text">Nom affiché : </label>
-                <div class="uk-form-controls">
-                    <input
-                      class="uk-input"
-                      id="form-horizontal-text"
-                      type="text"
-                      placeholder="Pseudo..."
-                      [(ngModel)]="user.displayName"
-                      [ngModelOptions]="{standalone: true}">
-                </div>
+          <div uk-grid>
+            <div>
+              <label class="uk-form-label" for="displayName">Nom affiché : </label>
+              <div class="uk-form-controls">
+                  <input class="uk-input"
+                    id="displayName"
+                    type="text"
+                    [(ngModel)]="user.displayName">
+              </div>
             </div>
-          </form>
+            <div>
+              <label class="uk-form-label" for="url">Url personnalisé : </label>
+              <div class="uk-form-controls">
+                  <input class="uk-input"
+                    id="url"
+                    type="text"
+                    [(ngModel)]="user.customUrl">
+              </div>
+            </div>
+          </div>
           <p><button class="uk-button uk-button-primary" (click)="saveDisplayName()">Valider</button></p>
       </div>
     </div>
@@ -59,8 +64,8 @@ export class AppComponent implements OnInit {
   async ngOnInit() {
     this.user = await this.auth.user$.pipe(take(1)).toPromise();
 
-    // check if displayname exist
-    if (!this.user.displayName) {
+    // check if displayName and customUrl exist
+    if (!this.user.displayName || !this.user.customUrl) {
       UIkit.modal('#modal-displayName').show();
     }
   }
@@ -68,7 +73,8 @@ export class AppComponent implements OnInit {
   saveDisplayName() {
     if (this.user.displayName) {
       UIkit.modal('#modal-displayName').hide();
-      this.auth.saveDisplayName(this.user.displayName);
+      const {displayName, customUrl} = this.user;
+      this.auth.saveUser({displayName, customUrl});
     }
   }
 }

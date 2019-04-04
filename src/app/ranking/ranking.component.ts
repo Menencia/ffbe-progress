@@ -16,7 +16,7 @@ import { User } from '../models/user';
       </thead>
       <tbody>
         <tr *ngFor="let user of users">
-          <td><a [routerLink]="'/player/' + user.uid">{{ user.getName() }}</a></td>
+          <td><a [routerLink]="user.getCustomUrl()">{{ user.getName() }}</a></td>
           <td>{{ user.points }}pts</td>
           <td>{{ user.dateRanking.toDate() | localizedDate }}</td>
         </tr>

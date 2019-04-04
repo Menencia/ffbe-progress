@@ -30,7 +30,7 @@ export class AuthService {
           this.userRef = this.afs.doc<User>(`users/${user.uid}`);
           return this.userRef.valueChanges().pipe(
             map((data) => {
-              return new User(data);
+              return new User({uid: user.uid, ...data});
             })
           );
         } else {
@@ -63,9 +63,9 @@ export class AuthService {
     return this.userRef.set(userObj.export(), { merge: true });
   }
 
-  saveDisplayName(displayName) {
+  saveUser(userSubset) {
 
-    return this.userRef.set({displayName}, { merge: true });
+    return this.userRef.set(userSubset, { merge: true });
 
   }
 }
