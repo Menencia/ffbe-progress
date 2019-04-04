@@ -3,7 +3,6 @@ import {TranslateService} from '@ngx-translate/core';
 import { AuthService } from './auth.service';
 import { take } from 'rxjs/operators';
 import UIkit from 'uikit';
-import { User } from './models/user';
 
 @Component({
   selector: 'app-root',
