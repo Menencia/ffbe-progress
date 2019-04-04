@@ -14,7 +14,7 @@ import { AuthService } from './auth.service';
           <li>
             <a href="#" routerLink="/mychallenges">
               <span class="uk-icon uk-margin-small-right" uk-icon="icon: star"></span>
-              Défis
+              Mes défis
             </a>
           </li>
           <li>

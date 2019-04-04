@@ -51,13 +51,13 @@ import { DataService } from './data.service';
                     <tr *ngFor="let mych of mycat.mychallenges">
                       <td>{{ mych.challenge.label.fr }}</td>
                       <td>
-                        <a class="uk-badge" [class.active]="mych.done" (click)="markAsDone(mych, 0)">Terminé</a>
+                        <a class="uk-badge done-inactive" [class.done-active]="mych.done" (click)="markAsDone(mych, 0)">Terminé</a>
                         <ng-container *ngIf="mych.challenge.missions">
                           <a *ngFor="let m of [1, 2, 3]"
-                            class="uk-badge"
-                            [class.active]="m <= mych.nbMissions"
+                            class="star-inactive"
+                            uk-icon="star"
+                            [class.star-active]="m <= mych.nbMissions"
                             (click)="markAsDone(mych, m)">
-                            {{m}}
                           </a>
                         </ng-container>
                       </td>
@@ -71,9 +71,25 @@ import { DataService } from './data.service';
     </div>
     `,
   styles: [`
-    .active {
-      background-color: #900;
-      color: #fff;
+    .done-inactive {
+      background-color: #ddd;
+      color: white;
+    }
+    .done-inactive:hover {
+      color: #009;
+    }
+    .done-active {
+      background-color: white;
+      color: #009;
+    }
+    .star-inactive {
+      color: #ddd;
+    }
+    .star-inactive:hover {
+      color: #009;
+    }
+    .star-active {
+      color: #009;
     }
   `]
 })
