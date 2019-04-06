@@ -4,6 +4,7 @@ import { map, } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import UIkit from 'uikit';
 import { Rank } from 'src/app/models/rank';
+import { DataService } from 'src/app/data.service';
 
 @Component({
   selector: 'app-admin-ranks',
@@ -64,14 +65,14 @@ export class AdminRanksComponent implements OnInit, OnDestroy {
 
   public ranksRef: AngularFirestoreCollection;
 
-  constructor(public afs: AngularFirestore) { }
+  constructor(
+    public afs: AngularFirestore,
+    public data: DataService,
+  ) { }
 
   ngOnInit() {
-    combineLatest([
-      this._getRanks()
-    ]).subscribe((data) => {
-      this._load(data[0]);
-    });
+    this.data.getRanks()
+      .subscribe(ranks => this.ranks = ranks);
   }
 
   ngOnDestroy() {
@@ -81,28 +82,8 @@ export class AdminRanksComponent implements OnInit, OnDestroy {
     }
   }
 
-  _getRanks() {
-    const options: QueryFn = ref => ref.orderBy('level', 'asc');
-    this.ranksRef = this.afs.collection<Rank>(`ranks`, options);
-    return this.ranksRef.snapshotChanges().pipe(
-      map(actions => actions.map(a => {
-        const uid = a.payload.doc.id;
-        const data = a.payload.doc.data() as Rank;
-        return {uid, ...data};
-      }))
-    );
-  }
-
-  _load(ranks) {
-    this.ranks = [];
-    for (const r of ranks) {
-      const rank = new Rank(r.uid, r.label, r.level, r.points);
-      this.ranks.push(rank);
-    }
-  }
-
   addRank() {
-    this.rank = new Rank(null, {fr: ''}, null, null);
+    this.rank = new Rank({});
     UIkit.modal('#modal-rank').show();
   }
 

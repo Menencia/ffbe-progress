@@ -1,21 +1,16 @@
-export class Rank {
+import { Model } from './model';
+
+export class Rank extends Model {
   uid: string;
   label: {fr: string};
   level: number;
   points: number;
 
-  constructor(uid, label, level, points) {
-    this.uid = uid;
-    this.label = label;
-    this.level = level;
-    this.points = points;
-  }
-
-  export() {
-    return {
-      label: this.label,
-      level: this.level,
-      points: this.points
-    };
+  constructor(rankObj) {
+    super(rankObj, {
+      label: {fr: null},
+      level: null,
+      points: null,
+    });
   }
 }

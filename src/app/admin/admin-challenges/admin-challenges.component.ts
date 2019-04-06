@@ -5,6 +5,7 @@ import { combineLatest } from 'rxjs';
 import UIkit from 'uikit';
 import { Challenge } from 'src/app/models/challenge';
 import { Category } from 'src/app/models/category';
+import { DataService } from 'src/app/data.service';
 
 @Component({
   selector: 'app-admin-challenges',
@@ -89,14 +90,14 @@ export class AdminChallengesComponent implements OnInit, OnDestroy {
   public challenge: Challenge;
 
 
-  constructor(public afs: AngularFirestore) { }
+  constructor(
+    public data: DataService,
+    public afs: AngularFirestore,
+  ) { }
 
   ngOnInit() {
-    combineLatest([
-      this._getCategories()
-    ]).subscribe((data) => {
-      this._load(data[0]);
-    });
+    this.data.getCategories()
+      .subscribe(categories => this.categories = categories);
   }
 
   ngOnDestroy() {
@@ -106,58 +107,13 @@ export class AdminChallengesComponent implements OnInit, OnDestroy {
     }
   }
 
-  _getCategories() {
-    const options: QueryFn = ref => ref.orderBy('position', 'asc');
-    return this.afs
-      .collection<Category>(`categories`, options)
-      .snapshotChanges()
-      .pipe(
-        map(actions => actions.map(a => {
-          const uid = a.payload.doc.id;
-          const data = a.payload.doc.data() as Category;
-          return {uid, ...data};
-        }))
-      );
-  }
-
-  _load(categories) {
-    this.categories = [];
-    for (const cat of categories) {
-      const category = new Category(cat.uid, cat.name, cat.position);
-      this.categories.push(category);
-    }
-  }
-
   changeCategory() {
-    combineLatest([
-      this._getChallenges()
-    ]).subscribe((data) => {
-      this.challenges = [];
-      for (const ch of data[0]) {
-        const challenge = new Challenge(ch.uid, ch.label, ch.missions, ch.points, ch.position, this.category);
-        this.challenges.push(challenge);
-      }
-    });
-  }
-
-  _getChallenges() {
-    const options = ref => ref
-      .where('category', '==', this.category.uid)
-      .orderBy('position', 'asc');
-    return this.afs
-      .collection(`challenges`, options)
-      .snapshotChanges()
-      .pipe(
-        map(actions => actions.map(a => {
-          const uid = a.payload.doc.id;
-          const data = a.payload.doc.data() as Challenge;
-          return {uid, ...data};
-        }))
-      );
+    this.data.getChallenges()
+      .subscribe(challenges => this.challenges = challenges);
   }
 
   addChallenge() {
-    this.challenge = new Challenge(null, {fr: ''}, false, 0, 1, this.category);
+    this.challenge = new Challenge({category: this.category});
     UIkit.modal('#modal-challenge').show();
   }
 

@@ -1,6 +1,7 @@
 import { Category } from './category';
+import { Model } from './model';
 
-export class Challenge {
+export class Challenge extends Model {
   uid: string;
   label: {fr: string};
   missions: boolean;
@@ -8,22 +9,14 @@ export class Challenge {
   position: number;
   category: Category;
 
-  constructor(uid, label, missions, points, position, category) {
-    this.uid = uid;
-    this.label = label;
-    this.missions = missions;
-    this.points = points;
-    this.position = position;
-    this.category = category;
+  constructor(challengeObj) {
+    super(challengeObj, {
+      label: {fr: null},
+      missions: false,
+      points: null,
+      position: null,
+      category: null,
+    });
   }
 
-  export() {
-    return {
-      label: this.label,
-      missions: this.missions,
-      points: this.points,
-      position: this.position,
-      category: this.category.uid
-    };
-  }
 }

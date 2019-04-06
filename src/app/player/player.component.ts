@@ -42,10 +42,4 @@ export class PlayerComponent implements OnInit {
       );
   }
 
-  // getMyChallenges() {
-  //   return this.auth.user$.pipe(
-  //     flatMap(user => this._getMyChallenges(user))
-  //   );
-  // }
-
 }

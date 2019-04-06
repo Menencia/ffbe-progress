@@ -7,6 +7,7 @@ import { Category } from './models/category';
 import { MyCategory } from './models/my_category';
 import { Challenge } from './models/challenge';
 import { MyChallenge } from './models/my_challenge';
+import { Rank } from './models/rank';
 
 @Injectable({
   providedIn: 'root'
@@ -32,17 +33,26 @@ export class DataService {
 
   getChallenges() {
     const options = ref => ref.orderBy('position', 'asc');
-    return this.collection('challenges', options);
+    return this.collection('challenges', options)
+    .pipe(
+      map(challenges => challenges.map(challengeObj => new Challenge(challengeObj)) )
+    );
   }
 
   getCategories() {
     const options = ref => ref.orderBy('position', 'asc');
-    return this.collection('categories', options);
+    return this.collection('categories', options)
+      .pipe(
+        map(categories => categories.map(categoryObj => new Category(categoryObj)) )
+      );
   }
 
   getRanks() {
     const options = ref => ref.orderBy('level', 'asc');
-    return this.collection('ranks', options);
+    return this.collection('ranks', options)
+      .pipe(
+        map(ranks => ranks.map(rankObj => new Rank(rankObj)) )
+      );
   }
 
   getMyChallenges(user) {
@@ -63,14 +73,12 @@ export class DataService {
         // challenges & categories
         let done, nbMissions;
         const mycategories = [];
-        for (const cat of categories) {
-          const category = new Category(cat.uid, cat.name, cat.position);
+        for (const category of categories) {
           const mycategory = new MyCategory(category);
-          for (const ch of challenges) {
-            if (ch.category !== cat.uid) {
+          for (const challenge of challenges) {
+            if (challenge.category !== category.uid) {
               continue;
             }
-            const challenge = new Challenge(ch.uid, ch.label, ch.missions, ch.points, ch.position, cat);
             const mychallenge = mychallenges.find(c => c.challenge === challenge.uid);
             if (mychallenge) {
               done = true;

@@ -113,83 +113,21 @@ export class ChallengesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    combineLatest([
-      this.getChallenges(),
-      this.getCategories(),
-      this.getRanks(),
-      this.getMyChallenges()
-    ]).subscribe(data => {
-      const [challenges, categories, ranks, mychallenges] = data;
-      this._load(challenges, categories, ranks, mychallenges);
-    });
-  }
+    this.data.getRanks()
+      .subscribe(ranks => this.ranks = ranks);
+    this.auth.user$
+      .pipe(
+        flatMap(user => this.data.getMyCategories(user))
+      ).subscribe(mycategories => {
+        this.mycategories = mycategories;
 
-  getChallenges() {
-    const options = ref => ref.orderBy('position', 'asc');
-    return this.data.collection('challenges', options);
-  }
+        // initial challenges
+        this.mychallenges = this.buildMyChallenges();
 
-  getCategories() {
-    const options = ref => ref.orderBy('position', 'asc');
-    return this.data.collection('categories', options);
-  }
-
-  getRanks() {
-    const options = ref => ref.orderBy('level', 'asc');
-    return this.data.collection('ranks', options);
-  }
-
-  getMyChallenges() {
-    return this.auth.user$.pipe(
-      flatMap(user => this._getMyChallenges(user))
-    );
-  }
-
-  _getMyChallenges(user) {
-    if (!user) {
-      return of([]);
-    }
-    return this.data.collection(`users/${user.uid}/mychallenges`);
-  }
-
-  _load(challenges, categories, ranks, mychallenges) {
-    // challenges & categories
-    let done, nbMissions;
-    this.mycategories = [];
-    for (const cat of categories) {
-      const category = new Category(cat.uid, cat.name, cat.position);
-      const mycategory = new MyCategory(category);
-      for (const ch of challenges) {
-        if (ch.category !== cat.uid) {
-          continue;
-        }
-        const challenge = new Challenge(ch.uid, ch.label, ch.missions, ch.points, ch.position, cat);
-        const mychallenge = mychallenges.find(c => c.challenge === challenge.uid);
-        if (mychallenge) {
-          done = true;
-          nbMissions = mychallenge.nbMissions;
-        } else {
-          done = false;
-          nbMissions = 0;
-        }
-        const mych = new MyChallenge(challenge, done, nbMissions);
-        mycategory.mychallenges.push(mych);
-      }
-      this.mycategories.push(mycategory);
-    }
-
-    // ranks
-    for (const r of ranks) {
-      const rank = new Rank(r.uid, r.label, r.level, r.points);
-      this.ranks.push(rank);
-    }
-
-    // save original mychallenges
-    this.mychallenges = mychallenges;
-
-    // refresh total points & rank
-    this.countTotalPoints();
-    this.refreshRank();
+        // refresh total points & rank
+        this.countTotalPoints();
+        this.refreshRank();
+      });
   }
 
   markAsDone(c: MyChallenge, nb: number) {

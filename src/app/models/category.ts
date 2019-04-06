@@ -1,20 +1,15 @@
-import { Challenge } from './challenge';
+import { Model } from './model';
 
-export class Category {
+export class Category extends Model {
   uid: string;
   name: {fr: string};
   position: number;
 
-  constructor(uid: string, name: {fr: string}, position: number) {
-    this.uid = uid;
-    this.name = name;
-    this.position = position;
+  constructor(categoryObj) {
+    super(categoryObj, {
+      name: {fr: null},
+      position: null,
+    });
   }
 
-  export() {
-    return {
-      name: this.name,
-      position: this.position
-    };
-  }
 }
