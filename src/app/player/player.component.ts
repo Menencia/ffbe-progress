@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
+import { flatMap } from 'rxjs/operators';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-player',
@@ -11,26 +12,40 @@ import { switchMap } from 'rxjs/operators';
 })
 export class PlayerComponent implements OnInit {
 
+  public user;
+  public ranks;
+  public mycategories;
+
   constructor(
-    private route: ActivatedRoute
+    public route: ActivatedRoute,
+    public data: DataService
   ) { }
 
   ngOnInit() {
-    this.route.paramMap.subscribe(function(params: ParamMap) {
-      console.log(params.get('id'));
-    })
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      this.getMyCategoriesFromCustomUrl(params.get('id'))
+       .subscribe(mycategories => {
+         this.mycategories = mycategories;
+       });
+      this.data.getRanks()
+        .subscribe(ranks => this.ranks = ranks);
+    });
   }
 
-  loadPlayer(id) {
-    // combineLatest([
-    //   this.getChallenges(),
-    //   this.getCategories(),
-    //   this.getRanks(),
-    //   this.getMyChallenges()
-    // ]).subscribe(data => {
-    //   const [challenges, categories, ranks, mychallenges] = data;
-    //   this._load(challenges, categories, ranks, mychallenges);
-    // });
+  getMyCategoriesFromCustomUrl(customUrl) {
+    return this.data.getUserFromCustomUrl(customUrl)
+      .pipe(
+        flatMap(user => {
+          this.user = user;
+          return this.data.getMyCategories(user);
+        })
+      );
   }
+
+  // getMyChallenges() {
+  //   return this.auth.user$.pipe(
+  //     flatMap(user => this._getMyChallenges(user))
+  //   );
+  // }
 
 }
