@@ -11,8 +11,11 @@ export class User extends Model {
   admin: boolean;
   lastConnected: Date;
   banned: boolean;
-  points: number;
-  dateRanking: Timestamp;
+  rank: {
+    points: number;
+    date: Timestamp;
+    obsolete: boolean;
+  };
 
   constructor(userData) {
     super(userData, {
@@ -23,8 +26,7 @@ export class User extends Model {
       admin: false,
       lastConnected: null,
       banned: false,
-      points: null,
-      dateRanking: null
+      rank: null,
     });
   }
 

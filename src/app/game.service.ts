@@ -61,8 +61,11 @@ export class GameService {
 
     // save to /players
     this.afs.doc(`users/${user.uid}`).set({
-      points: points,
-      dateRanking: new Date()
+      rank: {
+        points: points,
+        date: new Date(),
+        obsolete: false,
+      }
     }, { merge: true });
   }
 

@@ -17,8 +17,8 @@ import { User } from '../models/user';
       <tbody>
         <tr *ngFor="let user of users">
           <td><a [routerLink]="user.getProfileLink()">{{ user.getName() }}</a></td>
-          <td>{{ user.points }}pts</td>
-          <td>{{ user.dateRanking.toDate() | localizedDate }}</td>
+          <td>{{ user.rank.points }}pts</td>
+          <td>{{ user.rank.date.toDate() | localizedDate }}</td>
         </tr>
       </tbody>
     </table>
@@ -32,12 +32,12 @@ export class RankingComponent implements OnInit {
   constructor(public data: DataService) { }
 
   ngOnInit() {
-    const options = ref => ref.orderBy('points', 'desc');
+    const options = ref => ref.orderBy('rank.points', 'desc');
     this.data.collection('users', options)
       .subscribe((users: User[]) => {
         this.users = [];
         for (const userData of users) {
-          if (userData.points) {
+          if (userData.rank && userData.rank.points) {
             this.users.push(new User(userData));
           }
         }
