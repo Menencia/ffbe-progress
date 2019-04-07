@@ -75,7 +75,7 @@ export class PlayerComponent implements OnInit {
 
   ngOnInit() {
     this.route.paramMap.subscribe((params: ParamMap) => {
-      this.getMyCategoriesFromCustomUrl(params.get('id'))
+      this.getMyCategoriesFromTag(params.get('id'))
        .subscribe(mycategories => {
          this.mycategories = mycategories;
 
@@ -88,8 +88,8 @@ export class PlayerComponent implements OnInit {
     });
   }
 
-  getMyCategoriesFromCustomUrl(customUrl) {
-    return this.data.getUserFromCustomUrl(customUrl)
+  getMyCategoriesFromTag(tag) {
+    return this.data.getUserFromTag(tag)
       .pipe(
         flatMap(user => {
           this.user = user;

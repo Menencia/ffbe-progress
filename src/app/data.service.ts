@@ -97,8 +97,8 @@ export class DataService {
     )
   }
 
-  getUserFromCustomUrl(customUrl) {
-    const options = ref => ref.where('customUrl', '==', customUrl);
+  getUserFromTag(tag) {
+    const options = ref => ref.where('tag', '==', tag);
     return this.collection('users', options).pipe(
       map(users => new User(users[0]))
     );

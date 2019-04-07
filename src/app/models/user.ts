@@ -6,7 +6,7 @@ export class User extends Model {
   uid: string;
   name: string;
   displayName: string;
-  customUrl: string;
+  tag: string;
   email: string;
   admin: boolean;
   lastConnected: Date;
@@ -18,7 +18,7 @@ export class User extends Model {
     super(userData, {
       name: null,
       displayName: null,
-      customUrl: null,
+      tag: null,
       email: null,
       admin: false,
       lastConnected: null,
@@ -32,14 +32,11 @@ export class User extends Model {
     if (this.displayName) {
       return this.displayName;
     }
-    return this.uid.substring(0, 5);
+    return this.name;
   }
 
-  getCustomUrl() {
-    if (this.customUrl) {
-      return '/player/' + this.customUrl;
-    } else {
-      return '/p/' + this.uid;
-    }
+  getProfileLink() {
+    return '/player/' + this.tag;
   }
+
 }

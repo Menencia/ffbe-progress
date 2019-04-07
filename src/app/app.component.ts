@@ -29,15 +29,6 @@ import UIkit from 'uikit';
                     [(ngModel)]="user.displayName">
               </div>
             </div>
-            <div>
-              <label class="uk-form-label" for="url">Url personnalisé : </label>
-              <div class="uk-form-controls">
-                  <input class="uk-input"
-                    id="url"
-                    type="text"
-                    [(ngModel)]="user.customUrl">
-              </div>
-            </div>
           </div>
           <p><button class="uk-button uk-button-primary" (click)="saveDisplayName()">Valider</button></p>
       </div>
@@ -64,8 +55,8 @@ export class AppComponent implements OnInit {
   async ngOnInit() {
     this.user = await this.auth.user$.pipe(take(1)).toPromise();
 
-    // check if displayName and customUrl exist
-    if (!this.user.displayName || !this.user.customUrl) {
+    // check if displayName exist
+    if (this.user && !this.user.displayName) {
       UIkit.modal('#modal-displayName').show();
     }
   }
@@ -73,8 +64,16 @@ export class AppComponent implements OnInit {
   saveDisplayName() {
     if (this.user.displayName) {
       UIkit.modal('#modal-displayName').hide();
-      const {displayName, customUrl} = this.user;
-      this.auth.saveUser({displayName, customUrl});
+
+      // build 4-digit number
+      let number = Math.floor(Math.random() * 10000).toString();
+      while (number.length < 4) {
+        number = '0' + number;
+      }
+
+      this.user.tag = this.user.displayName + '#' + number;
+      const {displayName, tag} = this.user;
+      this.auth.saveUser({displayName, tag});
     }
   }
 }

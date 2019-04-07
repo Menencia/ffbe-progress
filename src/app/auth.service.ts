@@ -30,7 +30,10 @@ export class AuthService {
           this.userRef = this.afs.doc<User>(`users/${user.uid}`);
           return this.userRef.valueChanges().pipe(
             map((data) => {
-              return new User({uid: user.uid, ...data});
+              if (data) {
+                return new User({uid: user.uid, ...data});
+              }
+              return null;
             })
           );
         } else {
