@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
-import { map, take } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { combineLatest, of  } from 'rxjs';
 import { User } from './models/user';
 import { Category } from './models/category';
@@ -29,6 +29,15 @@ export class DataService {
           return {uid, ...data};
         }))
       );
+  }
+
+  getUsersRanking() {
+    const options = ref => ref
+      .orderBy('rank.points', 'desc');
+    return this.collection('users', options)
+    .pipe(
+      map(users => users.map(userObj => new User(userObj)) )
+    );
   }
 
   getChallenges() {

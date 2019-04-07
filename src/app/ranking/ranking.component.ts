@@ -32,13 +32,12 @@ export class RankingComponent implements OnInit {
   constructor(public data: DataService) { }
 
   ngOnInit() {
-    const options = ref => ref.orderBy('rank.points', 'desc');
-    this.data.collection('users', options)
+    this.data.getUsersRanking()
       .subscribe((users: User[]) => {
         this.users = [];
-        for (const userData of users) {
-          if (userData.rank && userData.rank.points) {
-            this.users.push(new User(userData));
+        for (const user of users) {
+          if (user.rank && user.rank.points) {
+            this.users.push(user);
           }
         }
       });
