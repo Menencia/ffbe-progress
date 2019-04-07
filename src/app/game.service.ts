@@ -15,6 +15,28 @@ export class GameService {
 
   constructor(public afs: AngularFirestore, public data: DataService) { }
 
+  getTotalPoints(mycategories) {
+    let pts = 0;
+
+    for (const mycat of mycategories) {
+      for (const mych of mycat.mychallenges) {
+        pts += mych.getPts();
+      }
+    }
+
+    return pts;
+  }
+
+  getRank(totalPoints, ranks) {
+    let rank = null;
+    let i = 0;
+    while(totalPoints >= ranks[i].points) {
+      i += 1;
+      rank = ranks[i];
+    }
+    return rank;
+  }
+
   save(toSet, toDelete, user: User, points, callback: Function) {
 
     this.total = toSet.length + toDelete.length;

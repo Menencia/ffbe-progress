@@ -3,10 +3,7 @@ import { AuthService } from './auth.service';
 import { MyChallenge } from './models/my_challenge';
 import { GameService } from './game.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Challenge } from './models/challenge';
-import { map, flatMap, take } from 'rxjs/operators';
-import { combineLatest, of  } from 'rxjs';
-import { Category } from './models/category';
+import { flatMap, take } from 'rxjs/operators';
 import { MyCategory } from './models/my_category';
 import { Rank } from './models/rank';
 import { DataService } from './data.service';
@@ -14,6 +11,7 @@ import { DataService } from './data.service';
 @Component({
   selector: 'app-challenges',
   template: `
+    <h2>Mes défis</h2>
     <div uk-grid>
       <div class="uk-width-auto@m">
           <ul class="uk-tab-left" uk-tab="connect: #component-tab-left; animation: uk-animation-fade">
@@ -70,28 +68,7 @@ import { DataService } from './data.service';
       </div>
     </div>
     `,
-  styles: [`
-    .done-inactive {
-      background-color: #ddd;
-      color: white;
-    }
-    .done-inactive:hover {
-      color: #009;
-    }
-    .done-active {
-      background-color: white;
-      color: #009;
-    }
-    .star-inactive {
-      color: #ddd;
-    }
-    .star-inactive:hover {
-      color: #009;
-    }
-    .star-active {
-      color: #009;
-    }
-  `]
+  styles: []
 })
 export class ChallengesComponent implements OnInit {
 
@@ -125,8 +102,8 @@ export class ChallengesComponent implements OnInit {
         this.mychallenges = this.buildMyChallenges();
 
         // refresh total points & rank
-        this.countTotalPoints();
-        this.refreshRank();
+        this.totalPoints = this.game.getTotalPoints(this.mycategories);
+        this.rank = this.game.getRank(this.totalPoints, this.ranks);
       });
   }
 
@@ -140,8 +117,10 @@ export class ChallengesComponent implements OnInit {
     }
     c.changed = true;
     this.checkChanges();
-    this.countTotalPoints();
-    this.refreshRank();
+
+    // refresh total points & rank
+    this.totalPoints = this.game.getTotalPoints(this.mycategories);
+    this.rank = this.game.getRank(this.totalPoints, this.ranks);
   }
 
   /**
@@ -181,28 +160,6 @@ export class ChallengesComponent implements OnInit {
       }
     }
     return res;
-  }
-
-  countTotalPoints() {
-    let pts = 0;
-
-    for (const mycat of this.mycategories) {
-      for (const mych of mycat.mychallenges) {
-        pts += mych.getPts();
-      }
-    }
-
-    this.totalPoints = pts;
-  }
-
-  refreshRank() {
-    let rank = null;
-    let i = 0;
-    while(this.totalPoints >= this.ranks[i].points) {
-      i += 1;
-      rank = this.ranks[i];
-    }
-    this.rank = rank;
   }
 
   async save() {
