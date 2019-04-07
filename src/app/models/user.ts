@@ -36,7 +36,11 @@ export class User extends Model {
   }
 
   getProfileLink() {
-    return '/player/' + this.tag;
+    if (this.tag) {
+      // stringify tag
+      return '/player/' + this.tag.replace('#', '-');
+    }
+    return null;
   }
 
 }

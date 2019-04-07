@@ -88,7 +88,11 @@ export class PlayerComponent implements OnInit {
     });
   }
 
-  getMyCategoriesFromTag(tag) {
+  getMyCategoriesFromTag(tag: string) {
+
+    // parse tag
+    tag = tag.replace('-', '#');
+
     return this.data.getUserFromTag(tag)
       .pipe(
         flatMap(user => {

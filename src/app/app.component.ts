@@ -62,7 +62,7 @@ export class AppComponent implements OnInit {
   }
 
   saveDisplayName() {
-    if (this.user.displayName) {
+    if (this.user.displayName && /^[a-zA-Z0-9]+$/.test(this.user.displayName)) {
       UIkit.modal('#modal-displayName').hide();
 
       // build 4-digit number
