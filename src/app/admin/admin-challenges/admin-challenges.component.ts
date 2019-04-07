@@ -108,7 +108,7 @@ export class AdminChallengesComponent implements OnInit, OnDestroy {
   }
 
   changeCategory() {
-    this.data.getChallenges()
+    this.data.getChallengesFromCategory(this.category.uid)
       .subscribe(challenges => this.challenges = challenges);
   }
 

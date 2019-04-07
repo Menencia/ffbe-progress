@@ -32,7 +32,18 @@ export class DataService {
   }
 
   getChallenges() {
-    const options = ref => ref.orderBy('position', 'asc');
+    const options = ref => ref
+      .orderBy('position', 'asc');
+    return this.collection('challenges', options)
+    .pipe(
+      map(challenges => challenges.map(challengeObj => new Challenge(challengeObj)) )
+    );
+  }
+
+  getChallengesFromCategory(categoryUid) {
+    const options = ref => ref
+      .where('category', '==', categoryUid)
+      .orderBy('position', 'asc');
     return this.collection('challenges', options)
     .pipe(
       map(challenges => challenges.map(challengeObj => new Challenge(challengeObj)) )
