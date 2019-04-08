@@ -40,7 +40,7 @@ export class User extends Model {
   getProfileLink() {
     if (this.tag) {
       // stringify tag
-      return '/player/' + this.tag.replace('#', '-');
+      return '/profile/' + this.tag.replace('#', '-');
     }
     return null;
   }

@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { flatMap } from 'rxjs/operators';
-import { DataService } from '../data.service';
+
 import { Rank } from '../models/rank';
-import { GameService } from '../game.service';
+
+import { GameService } from '../services/game.service';
+import { DataService } from '../services/data.service';
 
 @Component({
-  selector: 'app-player',
+  selector: 'app-mychallenges',
   template: `
   <h2 *ngIf="user">Profil de {{ user.displayName }}</h2>
   <div uk-grid>
@@ -58,7 +60,7 @@ import { GameService } from '../game.service';
   `,
   styles: []
 })
-export class PlayerComponent implements OnInit {
+export class MychallengesComponent implements OnInit {
 
   public user;
   public ranks;

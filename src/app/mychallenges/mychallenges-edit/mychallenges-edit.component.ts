@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from './auth.service';
-import { MyChallenge } from './models/my_challenge';
-import { GameService } from './game.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { flatMap, take } from 'rxjs/operators';
-import { MyCategory } from './models/my_category';
-import { Rank } from './models/rank';
-import { DataService } from './data.service';
+
+import { MyChallenge } from '../../models/my_challenge';
+import { MyCategory } from '../../models/my_category';
+import { Rank } from '../../models/rank';
+
+import { DataService } from '../../services/data.service';
+import { AuthService } from '../../services/auth.service';
+import { GameService } from '../../services/game.service';
 
 @Component({
-  selector: 'app-challenges',
+  selector: 'app-mychallenges-edit',
   template: `
     <h2>Mes défis</h2>
     <div uk-grid>
@@ -70,7 +72,7 @@ import { DataService } from './data.service';
     `,
   styles: []
 })
-export class ChallengesComponent implements OnInit {
+export class MychallengesEditComponent implements OnInit {
 
   mycategories: MyCategory[] = [];
   ranks: Rank[] = [];

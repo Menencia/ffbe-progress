@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
 import { combineLatest, of  } from 'rxjs';
-import { User } from './models/user';
-import { Category } from './models/category';
-import { MyCategory } from './models/my_category';
-import { Challenge } from './models/challenge';
-import { MyChallenge } from './models/my_challenge';
-import { Rank } from './models/rank';
+
+import { User } from '../models/user';
+import { Category } from '../models/category';
+import { MyCategory } from '../models/my_category';
+import { Challenge } from '../models/challenge';
+import { MyChallenge } from '../models/my_challenge';
+import { Rank } from '../models/rank';
 
 @Injectable({
   providedIn: 'root'
@@ -114,7 +115,7 @@ export class DataService {
         }
         return mycategories;
       })
-    )
+    );
   }
 
   getUserFromTag(tag) {

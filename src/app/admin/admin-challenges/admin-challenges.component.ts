@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection, QueryFn } from '@angular/fire/firestore';
-import { map, } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/firestore';
 import UIkit from 'uikit';
+
 import { Challenge } from 'src/app/models/challenge';
 import { Category } from 'src/app/models/category';
-import { DataService } from 'src/app/data.service';
+
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-admin-challenges',

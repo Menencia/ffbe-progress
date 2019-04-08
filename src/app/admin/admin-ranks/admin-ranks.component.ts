@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection, QueryFn } from '@angular/fire/firestore';
-import { map, } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import UIkit from 'uikit';
+
 import { Rank } from 'src/app/models/rank';
-import { DataService } from 'src/app/data.service';
+
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-admin-ranks',

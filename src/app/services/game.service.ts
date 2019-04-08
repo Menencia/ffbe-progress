@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+
+import { User } from '../models/user';
+
 import { DataService } from './data.service';
-import { User } from './models/user';
-import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,7 @@ export class GameService {
   getRank(totalPoints, ranks) {
     let rank = null;
     let i = 0;
-    while(totalPoints >= ranks[i].points) {
+    while (totalPoints >= ranks[i].points) {
       i += 1;
       rank = ranks[i];
     }

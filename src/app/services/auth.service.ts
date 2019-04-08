@@ -7,7 +7,7 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 import { Observable, of } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 
-import { User } from './models/user';
+import { User } from '../models/user';
 
 import * as moment from 'moment';
 

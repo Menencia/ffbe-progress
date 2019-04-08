@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
-import { AuthService } from './auth.service';
+import { AuthService } from './services/auth.service';
 import { take } from 'rxjs/operators';
 import UIkit from 'uikit';
 
