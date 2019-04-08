@@ -32,7 +32,13 @@ import { AuthService } from '../services/auth.service';
         <div *ngIf="auth.user$ | async as user; else showLogin">
           <ul class="uk-navbar-nav">
             <li class="uk-navbar-item">
-              {{ user.getName() }}
+              {{ user.tag }}
+            </li>
+            <li class="uk-navbar-item">
+              <a href="#" routerLink="/settings">
+                <span class="uk-icon uk-margin-small-right" uk-icon="icon: settings"></span>
+                Options
+              </a>
             </li>
             <li *ngIf="user.admin">
               <a href="#" routerLink="/admin">

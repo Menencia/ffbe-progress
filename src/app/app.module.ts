@@ -19,7 +19,7 @@ import { AdminChallengesComponent } from './admin/admin-challenges/admin-challen
 import { AdminRanksComponent } from './admin/admin-ranks/admin-ranks.component';
 import { MychallengesComponent } from './mychallenges/mychallenges.component';
 import { RankingComponent } from './ranking/ranking.component';
-import { UserComponent } from './user/user.component';
+import { SettingsComponent } from './settings/settings.component';
 
 import { AdminGuard } from './guards/admin.guard';
 
@@ -43,7 +43,7 @@ registerLocaleData(localeFr, 'fr');
     AdminRanksComponent,
     MychallengesComponent,
     RankingComponent,
-    UserComponent,
+    SettingsComponent,
     LocalizedDatePipe
   ],
   imports: [

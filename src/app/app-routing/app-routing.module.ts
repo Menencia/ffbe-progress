@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MychallengesComponent } from '../mychallenges/mychallenges.component';
 import { MychallengesEditComponent } from '../mychallenges/mychallenges-edit/mychallenges-edit.component';
 import { RankingComponent } from '../ranking/ranking.component';
+import { SettingsComponent } from '../settings/settings.component';
 import { AdminComponent } from '../admin/admin.component';
 
 import { AdminGuard } from '../guards/admin.guard';
@@ -11,6 +12,7 @@ import { AdminGuard } from '../guards/admin.guard';
 const appRoutes: Routes = [
   { path: 'mychallenges', component: MychallengesEditComponent },
   { path: 'profile/:id', component: MychallengesComponent },
+  { path: 'settings', component: SettingsComponent },
   { path: 'ranking', component: RankingComponent },
   { path: 'admin', component: AdminComponent, canActivate: [AdminGuard] },
   { path: '', redirectTo: '/mychallenges', pathMatch: 'full' },
