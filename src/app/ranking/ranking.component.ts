@@ -7,7 +7,7 @@ import { DataService } from '../services/data.service';
 @Component({
   selector: 'app-ranking',
   template: `
-    <h1>Classement</h1>
+    <h2 class="uk-heading-divider">Classement</h2>
     <table class="uk-table uk-table-divider">
       <thead>
         <tr>

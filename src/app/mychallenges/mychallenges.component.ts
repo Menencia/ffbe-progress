@@ -10,7 +10,7 @@ import { DataService } from '../services/data.service';
 @Component({
   selector: 'app-mychallenges',
   template: `
-  <h2 *ngIf="user">Profil de {{ user.displayName }}</h2>
+  <h2 *ngIf="user" class="uk-heading-divider">Profil de {{ user.displayName }}</h2>
   <div uk-grid>
     <div class="uk-width-auto@m">
         <ul class="uk-tab-left" uk-tab="connect: #component-tab-left; animation: uk-animation-fade">

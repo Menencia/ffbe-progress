@@ -13,7 +13,7 @@ import { GameService } from '../../services/game.service';
 @Component({
   selector: 'app-mychallenges-edit',
   template: `
-    <h2>Mes défis</h2>
+    <h2 class="uk-heading-divider">Mes défis</h2>
     <div uk-grid>
       <div class="uk-width-auto@m">
           <ul class="uk-tab-left" uk-tab="connect: #component-tab-left; animation: uk-animation-fade">
