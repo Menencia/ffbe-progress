@@ -19,4 +19,10 @@ export class Challenge extends Model {
     });
   }
 
+  export() {
+    const res = super.export();
+    res['category'] = res['category'].uid;
+    return res;
+  }
+
 }

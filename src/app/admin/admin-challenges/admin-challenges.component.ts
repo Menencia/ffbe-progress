@@ -89,7 +89,6 @@ export class AdminChallengesComponent implements OnInit, OnDestroy {
   public title = 'Ch';
   public challenge: Challenge;
 
-
   constructor(
     public data: DataService,
     public afs: AngularFirestore,

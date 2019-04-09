@@ -57,8 +57,6 @@ export class AdminCategoriesComponent implements OnInit, OnDestroy {
   public title = 'Cat';
   public category: Category;
 
-  public categoriesRef: AngularFirestoreCollection;
-
   constructor(
     public data: DataService,
     public afs: AngularFirestore,
@@ -91,7 +89,7 @@ export class AdminCategoriesComponent implements OnInit, OnDestroy {
     if (this.category.uid) {
       this.afs.doc(`categories/${this.category.uid}`).update(this.category.export());
     } else {
-      this.categoriesRef.add(this.category.export());
+      this.afs.collection('categories').add(this.category.export());
     }
   }
 
