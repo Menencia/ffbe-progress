@@ -10,6 +10,7 @@ import { switchMap, map } from 'rxjs/operators';
 import { User } from '../models/user';
 
 import * as moment from 'moment';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,8 @@ export class AuthService {
 
   constructor(
     public afAuth: AngularFireAuth,
-    public afs: AngularFirestore
+    public afs: AngularFirestore,
+    public router: Router,
   ) {
     this.user$ = this.afAuth.authState.pipe(
       switchMap(user => {

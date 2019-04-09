@@ -15,7 +15,7 @@ import { GameService } from '../../services/game.service';
   template: `
     <h2 class="uk-heading-divider">Mes défis</h2>
     <div uk-grid>
-      <div class="uk-width-auto@m">
+      <div class="uk-width-1-3@m">
           <ul class="uk-tab-left" uk-tab="connect: #component-tab-left; animation: uk-animation-fade">
             <li *ngFor="let mycat of mycategories"><a href="#">{{ mycat.category.name.fr }}</a></li>
           </ul>
@@ -31,10 +31,15 @@ import { GameService } from '../../services/game.service';
           <button class="uk-button uk-align-center"
             (click)="save()"
             [class.uk-button-primary]="isSavePrimary"
-            *ngIf="auth.user$ | async">
+            *ngIf="(auth.user$ | async)?.displayName">
             <span uk-icon="icon: upload" *ngIf="!isSaveLoading"></span>
             <span uk-spinner="ratio: 0.5" *ngIf="isSaveLoading"></span>
             Sauvegarder</button>
+
+          <div class="uk-alert uk-alert-warning" *ngIf="!(auth.user$ | async)?.displayName">
+            Pour pouvoir sauvegarder vos défis, il faut d'abord définir
+            votre nom affiché via les <a href="#" routerLink="/settings">options</a>.
+          </div>
       </div>
       <div class="uk-width-expand@m">
           <ul id="component-tab-left" class="uk-switcher">

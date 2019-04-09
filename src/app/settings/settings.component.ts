@@ -36,7 +36,10 @@ import { take } from 'rxjs/operators';
             <span class="uk-text-middle">Tag</span>
           </label>
           <div class="uk-form-controls">
-            {{ user.tag }}
+            <span *ngIf="user.tag else noTag">{{ user.tag }}</span>
+            <ng-template #noTag>
+              <i>N/A</i>
+            </ng-template>
           </div>
       </div>
 

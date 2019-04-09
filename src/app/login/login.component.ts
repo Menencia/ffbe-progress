@@ -13,6 +13,12 @@ import { AuthService } from '../services/auth.service';
 
         <ul class="uk-navbar-nav">
           <li>
+            <a href="#" routerLink="/home">
+              <span class="uk-icon uk-margin-small-right" uk-icon="icon: home"></span>
+              Accueil
+            </a>
+          </li>
+          <li *ngIf="auth.user$ | async">
             <a href="#" routerLink="/mychallenges">
               <span class="uk-icon uk-margin-small-right" uk-icon="icon: star"></span>
               Mes défis

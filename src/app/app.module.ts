@@ -22,12 +22,14 @@ import { RankingComponent } from './ranking/ranking.component';
 import { SettingsComponent } from './settings/settings.component';
 
 import { AdminGuard } from './guards/admin.guard';
+import { UserGuard } from './guards/user.guard';
 
 import { LocalizedDatePipe } from './pipes/localized-date.pipe';
 
 import { TranslateModule } from '@ngx-translate/core';
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
+import { HomeComponent } from './home/home.component';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeFr, 'fr');
@@ -44,7 +46,8 @@ registerLocaleData(localeFr, 'fr');
     MychallengesComponent,
     RankingComponent,
     SettingsComponent,
-    LocalizedDatePipe
+    LocalizedDatePipe,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -58,7 +61,8 @@ registerLocaleData(localeFr, 'fr');
   ],
   providers: [
     AuthService,
-    AdminGuard
+    AdminGuard,
+    UserGuard,
   ],
   bootstrap: [AppComponent]
 })
