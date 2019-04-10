@@ -1,10 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { AngularFirestore } from '@angular/fire/firestore';
 import UIkit from 'uikit';
 
+import { Change, ChangeType, ChangeOperation } from 'src/app/models/change';
 import { Category } from 'src/app/models/category';
 
 import { DataService } from 'src/app/services/data.service';
+import { ChangeService } from 'src/app/services/change.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-admin-categories',
@@ -60,6 +63,8 @@ export class AdminCategoriesComponent implements OnInit, OnDestroy {
   constructor(
     public data: DataService,
     public afs: AngularFirestore,
+    public auth: AuthService,
+    public changeService: ChangeService,
   ) { }
 
   ngOnInit() {
@@ -84,12 +89,23 @@ export class AdminCategoriesComponent implements OnInit, OnDestroy {
     UIkit.modal('#modal-category').show();
   }
 
-  _modifyCategory() {
+  async _modifyCategory() {
     UIkit.modal('#modal-category').hide();
     if (this.category.uid) {
       this.afs.doc(`categories/${this.category.uid}`).update(this.category.export());
     } else {
-      this.afs.collection('categories').add(this.category.export());
+      // this.afs.collection('categories').add(this.category.export());
+
+      // create new change
+      const user = await this.auth.getUser();
+      const change = new Change({
+        name: this.category.name.fr,
+        type: ChangeType.Category,
+        operation: ChangeOperation.Creation,
+        author: user.uid,
+        date: new Date(),
+      });
+      this.changeService.add(change);
     }
   }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { flatMap, take } from 'rxjs/operators';
+import { flatMap } from 'rxjs/operators';
 
 import { MyChallenge } from '../../models/my_challenge';
 import { MyCategory } from '../../models/my_category';
@@ -172,7 +172,7 @@ export class MychallengesEditComponent implements OnInit {
   async save() {
     const [toSet, toDelete] = this.checkChanges();
     this.isSaveLoading = true;
-    const user = await this.auth.user$.pipe(take(1)).toPromise();
+    const user = await this.auth.getUser();
     this.game.save(toSet, toDelete, user, this.totalPoints, () => {
       this.isSavePrimary = false;
       this.isSaveLoading = false;

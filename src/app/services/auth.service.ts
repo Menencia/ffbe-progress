@@ -5,7 +5,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 
 import { Observable, of } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, take } from 'rxjs/operators';
 
 import { User } from '../models/user';
 
@@ -68,9 +68,11 @@ export class AuthService {
     return this.userRef.set(userObj.export(), { merge: true });
   }
 
+  getUser() {
+    return this.user$.pipe(take(1)).toPromise();
+  }
+
   saveUser(userSubset) {
-
     return this.userRef.set(userSubset, { merge: true });
-
   }
 }

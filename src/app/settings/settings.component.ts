@@ -79,7 +79,7 @@ export class SettingsComponent implements OnInit {
 
   async ngOnInit() {
     // get current user
-    this.user = await this.auth.user$.pipe(take(1)).toPromise();
+    this.user = await this.auth.getUser();
   }
 
   saveSettings() {

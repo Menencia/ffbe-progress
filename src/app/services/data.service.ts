@@ -9,6 +9,7 @@ import { MyCategory } from '../models/my_category';
 import { Challenge } from '../models/challenge';
 import { MyChallenge } from '../models/my_challenge';
 import { Rank } from '../models/rank';
+import { Change } from '../models/change';
 
 @Injectable({
   providedIn: 'root'
@@ -123,6 +124,18 @@ export class DataService {
     return this.collection('users', options).pipe(
       map(users => new User(users[0]))
     );
+  }
+
+  getChanges() {
+    const options = ref => ref.orderBy('date', 'desc');
+    const obs = this.collection('changes', options).pipe(
+      map(changes => changes.map(changeObj => new Change(changeObj)) )
+    );
+    return new Promise<Change[]>((resolve, reject) => {
+      obs.subscribe((response) => {
+        resolve(response);
+      }, reject);
+    });
   }
 
 }

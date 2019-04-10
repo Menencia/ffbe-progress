@@ -1,0 +1,39 @@
+import { Model } from './model';
+
+export enum ChangeType {
+  Category = 'cat',
+  Challenge = 'ch',
+  Rank = 'r',
+}
+
+export enum ChangeOperation {
+  Creation = 'c',
+  Update = 'u',
+  Delete = 'd',
+}
+
+/**
+ * Examples:
+ * "Création de la catégorie 'Abysses dangereuses' par Menencia."
+ * "Mise à jour du challenge 'Bahamut' ('Abysses dangereuses') par Menencia."
+ * "Suppression du rang 'Prince défait' par Menencia."
+ */
+export class Change extends Model {
+  uid: string;
+  name: string;
+  type: ChangeType;
+  operation: ChangeOperation;
+  author: string;
+  date: Date;
+
+  constructor(changeObj) {
+    super(changeObj, {
+      name: null,
+      type: null,
+      operation: null,
+      author: null,
+      date: null,
+    });
+  }
+
+}
