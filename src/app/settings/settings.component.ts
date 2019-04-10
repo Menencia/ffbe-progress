@@ -8,7 +8,7 @@ import { take } from 'rxjs/operators';
   template: `
     <h2 class="uk-heading-divider">Options</h2>
 
-    <form class="uk-form-horizontal uk-margin-large" *ngIf="user" #settings="ngForm">
+    <form class="uk-form-horizontal" *ngIf="user" #settings="ngForm">
 
       <div class="uk-margin">
           <label class="uk-form-label uk-text-bold" for="displayName">
@@ -53,7 +53,7 @@ import { take } from 'rxjs/operators';
           </div>
       </div>
 
-      <button class="uk-button uk-button-primary"
+      <button class="uk-button uk-button-primary uk-align-right"
         [disabled]="!settings.form.valid || settings.form.pristine"
         (click)="saveSettings()">Valider</button>
 

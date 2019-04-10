@@ -26,7 +26,7 @@ import { AuthService } from '../services/auth.service';
           </li>
           <li *ngIf="auth.user$ | async as user">
             <a href="#" [routerLink]="user.getProfileLink()">
-              <span class="uk-icon uk-margin-small-right" uk-icon="icon: star"></span>
+              <span class="uk-icon uk-margin-small-right" uk-icon="icon: user"></span>
               Mon profil
             </a>
           </li>
