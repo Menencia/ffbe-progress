@@ -24,6 +24,12 @@ import { AuthService } from '../services/auth.service';
               Mes défis
             </a>
           </li>
+          <li *ngIf="auth.user$ | async as user">
+            <a href="#" [routerLink]="user.getProfileLink()">
+              <span class="uk-icon uk-margin-small-right" uk-icon="icon: star"></span>
+              Mon profil
+            </a>
+          </li>
           <li>
             <a href="#" routerLink="/ranking">
               <span class="uk-icon uk-margin-small-right" uk-icon="icon: users"></span>

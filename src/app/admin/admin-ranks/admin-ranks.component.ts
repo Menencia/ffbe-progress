@@ -63,8 +63,6 @@ export class AdminRanksComponent implements OnInit, OnDestroy {
   public title = 'Rnk';
   public rank: Rank;
 
-  public ranksRef: AngularFirestoreCollection;
-
   constructor(
     public afs: AngularFirestore,
     public data: DataService,
@@ -97,7 +95,7 @@ export class AdminRanksComponent implements OnInit, OnDestroy {
     if (this.rank.uid) {
       this.afs.doc(`ranks/${this.rank.uid}`).update(this.rank.export());
     } else {
-      this.ranksRef.add(this.rank.export());
+      this.afs.collection('ranks').add(this.rank.export());
     }
   }
 
