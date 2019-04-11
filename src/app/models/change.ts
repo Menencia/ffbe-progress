@@ -7,7 +7,7 @@ export enum ChangeType {
 }
 
 export enum ChangeOperation {
-  Creation = 'c',
+  Create = 'c',
   Update = 'u',
   Delete = 'd',
 }
@@ -25,6 +25,7 @@ export class Change extends Model {
   operation: ChangeOperation;
   author: string;
   date: Date;
+  important: boolean;
 
   constructor(changeObj) {
     super(changeObj, {
@@ -33,6 +34,7 @@ export class Change extends Model {
       operation: null,
       author: null,
       date: null,
+      important: false,
     });
   }
 

@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { AngularFirestore } from '@angular/fire/firestore';
 import UIkit from 'uikit';
 
 import { Rank } from 'src/app/models/rank';
 
 import { DataService } from 'src/app/services/data.service';
+import { ChangeService } from 'src/app/services/change.service';
 
 @Component({
   selector: 'app-admin-ranks',
@@ -66,6 +67,7 @@ export class AdminRanksComponent implements OnInit, OnDestroy {
   constructor(
     public afs: AngularFirestore,
     public data: DataService,
+    public changeService: ChangeService,
   ) { }
 
   ngOnInit() {
@@ -94,8 +96,14 @@ export class AdminRanksComponent implements OnInit, OnDestroy {
     UIkit.modal('#modal-rank').hide();
     if (this.rank.uid) {
       this.afs.doc(`ranks/${this.rank.uid}`).update(this.rank.export());
+
+      // new change
+      this.changeService.rankUpdate(`${this.rank.label.fr}`, false);
     } else {
       this.afs.collection('ranks').add(this.rank.export());
+
+      // new change
+      this.changeService.rankCreate(`${this.rank.label.fr}`, false);
     }
   }
 
@@ -103,6 +111,9 @@ export class AdminRanksComponent implements OnInit, OnDestroy {
     UIkit.modal.confirm('Confirmer?').then(
       () => {
         this.afs.doc(`ranks/${rank.uid}`).delete();
+
+        // new change
+        this.changeService.rankDelete(`${this.rank.label.fr}`, false);
       },
       () => {
         // do nothing

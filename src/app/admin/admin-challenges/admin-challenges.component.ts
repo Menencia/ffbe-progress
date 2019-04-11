@@ -6,6 +6,7 @@ import { Challenge } from 'src/app/models/challenge';
 import { Category } from 'src/app/models/category';
 
 import { DataService } from 'src/app/services/data.service';
+import { ChangeService } from 'src/app/services/change.service';
 
 @Component({
   selector: 'app-admin-challenges',
@@ -82,6 +83,7 @@ export class AdminChallengesComponent implements OnInit, OnDestroy {
 
   public categories: Category[];
   public category: Category;
+  public original;
 
   public challenges: Challenge[] = [];
 
@@ -92,6 +94,7 @@ export class AdminChallengesComponent implements OnInit, OnDestroy {
   constructor(
     public data: DataService,
     public afs: AngularFirestore,
+    public changeService: ChangeService,
   ) { }
 
   ngOnInit() {
@@ -118,6 +121,7 @@ export class AdminChallengesComponent implements OnInit, OnDestroy {
 
   modifyChallenge(ch) {
     this.challenge = ch;
+    this.original = Object.assign({}, ch.export());
     UIkit.modal('#modal-challenge').show();
   }
 
@@ -125,8 +129,21 @@ export class AdminChallengesComponent implements OnInit, OnDestroy {
     UIkit.modal('#modal-challenge').hide();
     if (this.challenge.uid) {
       this.afs.doc(`challenges/${this.challenge.uid}`).update(this.challenge.export());
+
+      // new change
+      this.changeService.challengeUpdate(
+        `${this.challenge.label.fr} (${this.category.name.fr})`,
+        (this.original.points !== this.challenge.points ||
+          this.original.missions !== this.challenge.missions)
+      );
     } else {
       this.afs.collection('challenges').add(this.challenge.export());
+
+      // new change
+      this.changeService.challengeCreate(
+        `${this.challenge.label.fr} (${this.category.name.fr})`,
+        false
+      );
     }
   }
 
@@ -134,6 +151,12 @@ export class AdminChallengesComponent implements OnInit, OnDestroy {
     UIkit.modal.confirm('Confirmer?').then(
       () => {
         this.afs.doc(`challenges/${ch.uid}`).delete();
+
+        // new change
+        this.changeService.challengeDelete(
+          `${this.challenge.label.fr} (${this.category.name.fr})`,
+          true
+        );
       },
       () => {
         // do nothing

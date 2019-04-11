@@ -2,12 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import UIkit from 'uikit';
 
-import { Change, ChangeType, ChangeOperation } from 'src/app/models/change';
 import { Category } from 'src/app/models/category';
 
 import { DataService } from 'src/app/services/data.service';
 import { ChangeService } from 'src/app/services/change.service';
-import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-admin-categories',
@@ -63,7 +61,6 @@ export class AdminCategoriesComponent implements OnInit, OnDestroy {
   constructor(
     public data: DataService,
     public afs: AngularFirestore,
-    public auth: AuthService,
     public changeService: ChangeService,
   ) { }
 
@@ -89,23 +86,18 @@ export class AdminCategoriesComponent implements OnInit, OnDestroy {
     UIkit.modal('#modal-category').show();
   }
 
-  async _modifyCategory() {
+  _modifyCategory() {
     UIkit.modal('#modal-category').hide();
     if (this.category.uid) {
       this.afs.doc(`categories/${this.category.uid}`).update(this.category.export());
-    } else {
-      // this.afs.collection('categories').add(this.category.export());
 
-      // create new change
-      const user = await this.auth.getUser();
-      const change = new Change({
-        name: this.category.name.fr,
-        type: ChangeType.Category,
-        operation: ChangeOperation.Creation,
-        author: user.uid,
-        date: new Date(),
-      });
-      this.changeService.add(change);
+      // new change
+      this.changeService.categoryUpdate(this.category.name.fr, false);
+    } else {
+      this.afs.collection('categories').add(this.category.export());
+
+      // new change
+      this.changeService.categoryCreate(this.category.name.fr, false);
     }
   }
 
@@ -114,6 +106,9 @@ export class AdminCategoriesComponent implements OnInit, OnDestroy {
     UIkit.modal.confirm('Confirmer?').then(
       () => {
         this.afs.doc(`categories/${category.uid}`).delete();
+
+        // new change
+        this.changeService.categoryDelete(this.category.name.fr, false);
       },
       () => {
         // do nothing
