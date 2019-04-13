@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing/app-routing.module';
 
@@ -20,19 +20,26 @@ import { AdminRanksComponent } from './admin/admin-ranks/admin-ranks.component';
 import { MychallengesComponent } from './mychallenges/mychallenges.component';
 import { RankingComponent } from './ranking/ranking.component';
 import { SettingsComponent } from './settings/settings.component';
+import { HomeComponent } from './home/home.component';
+import { ChangesComponent } from './changes/changes.component';
 
 import { AdminGuard } from './guards/admin.guard';
 import { UserGuard } from './guards/user.guard';
 
 import { LocalizedDatePipe } from './pipes/localized-date.pipe';
 
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
-import { HomeComponent } from './home/home.component';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeFr, 'fr');
+
+// AoT requires an exported function for factories
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
 
 @NgModule({
   declarations: [
@@ -47,14 +54,21 @@ registerLocaleData(localeFr, 'fr');
     RankingComponent,
     SettingsComponent,
     LocalizedDatePipe,
-    HomeComponent
+    HomeComponent,
+    ChangesComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
     AppRoutingModule,
-    TranslateModule.forRoot(),
+    TranslateModule.forRoot({
+      loader: {
+          provide: TranslateLoader,
+          useFactory: HttpLoaderFactory,
+          deps: [HttpClient]
+      }
+    }),
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireAuthModule,
     AngularFirestoreModule

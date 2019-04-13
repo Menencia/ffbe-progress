@@ -26,7 +26,7 @@ export class ChangeService {
 
   async add(change: Change) {
     // get all changes
-    const changes = await this.data.getChanges();
+    const changes = await this.data.getChangesPromise();
 
     // delete first change if too many
     if (changes.length >= 10) {

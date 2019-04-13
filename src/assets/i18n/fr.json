@@ -1,0 +1,13 @@
+{
+  "CHANGE": {
+    "CAT_C": "Création d'une nouvelle catégorie: {{name}}",
+    "CAT_U": "Modification d'une catégorie: {{name}}",
+    "CAT_D": "Supression d'une catégorie: {{name}}",
+    "CH_C": "Création d'un nouveau défi: {{name}}",
+    "CH_U": "Modification du défi: {{name}}",
+    "CH_D": "Suppression du défi: {{name}}",
+    "R_C": "Création d'un nouveau rang: {{name}}",
+    "R_U": "Modification du rang: {{name}}",
+    "R_D": "Suppression du rang: {{name}}"
+  }
+}

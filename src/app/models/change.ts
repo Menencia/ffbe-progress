@@ -1,4 +1,6 @@
 import { Model } from './model';
+import { firestore } from 'firebase';
+import Timestamp = firestore.Timestamp;
 
 export enum ChangeType {
   Category = 'cat',
@@ -24,7 +26,7 @@ export class Change extends Model {
   type: ChangeType;
   operation: ChangeOperation;
   author: string;
-  date: Date;
+  date: Timestamp;
   important: boolean;
 
   constructor(changeObj) {

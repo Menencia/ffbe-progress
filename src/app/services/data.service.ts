@@ -128,11 +128,14 @@ export class DataService {
 
   getChanges() {
     const options = ref => ref.orderBy('date', 'desc');
-    const obs = this.collection('changes', options).pipe(
+    return this.collection('changes', options).pipe(
       map(changes => changes.map(changeObj => new Change(changeObj)) )
     );
+  }
+
+  getChangesPromise() {
     return new Promise<Change[]>((resolve, reject) => {
-      obs.subscribe((response) => {
+      this.getChanges().subscribe((response) => {
         resolve(response);
       }, reject);
     });
