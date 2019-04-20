@@ -9,6 +9,7 @@ import { Rank } from '../../models/rank';
 import { DataService } from '../../services/data.service';
 import { AuthService } from '../../services/auth.service';
 import { GameService } from '../../services/game.service';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-mychallenges-edit',
@@ -39,6 +40,11 @@ import { GameService } from '../../services/game.service';
           <div class="uk-alert uk-alert-warning" *ngIf="!(auth.user$ | async)?.displayName">
             Pour pouvoir sauvegarder vos défis, il faut d'abord définir
             votre nom affiché via les <a href="#" routerLink="/settings">options</a>.
+          </div>
+
+          <div class="uk-alert uk-alert-warning" *ngIf="showLastChangeDateWarning">
+            Sauvegardez votre profil pour apparaître dans le classement (voir les derniers
+            <a href="#" routerLink="/changes">changements</a>).
           </div>
       </div>
       <div class="uk-width-expand@m">
@@ -89,6 +95,9 @@ export class MychallengesEditComponent implements OnInit {
   totalPoints: number;
   rank: Rank;
 
+  user: User;
+  showLastChangeDateWarning: boolean;
+
   constructor(
     public auth: AuthService,
     public game: GameService,
@@ -101,7 +110,10 @@ export class MychallengesEditComponent implements OnInit {
       .subscribe(ranks => this.ranks = ranks);
     this.auth.user$
       .pipe(
-        flatMap(user => this.data.getMyCategories(user))
+        flatMap(user => {
+          this.user = user;
+          return this.data.getMyCategories(user);
+        })
       ).subscribe(mycategories => {
         this.mycategories = mycategories;
 
@@ -111,6 +123,16 @@ export class MychallengesEditComponent implements OnInit {
         // refresh total points & rank
         this.totalPoints = this.game.getTotalPoints(this.mycategories);
         this.rank = this.game.getRank(this.totalPoints, this.ranks);
+
+        // check last change date
+        this.checkLastChangeDate();
+      });
+  }
+
+  checkLastChangeDate() {
+    this.data.getLastChangeDate()
+      .subscribe(lastChangeDate => {
+        this.showLastChangeDateWarning = this.user.rank.date.toDate() < lastChangeDate;
       });
   }
 
