@@ -34,7 +34,15 @@ export class DataService {
   }
 
   getUsersRanking() {
+    return this.getLastChangeDate().pipe(
+      flatMap(lastChangeDate => this._getUsersRanking(lastChangeDate))
+    );
+  }
+
+  _getUsersRanking(lastChangeDate) {
     const options = ref => ref
+      .where('rank.date', '>', lastChangeDate)
+      .orderBy('rank.date', 'desc')
       .orderBy('rank.points', 'desc');
     return this.collection('users', options)
     .pipe(
