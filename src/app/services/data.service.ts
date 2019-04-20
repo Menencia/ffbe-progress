@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
-import { map } from 'rxjs/operators';
+import { map, flatMap } from 'rxjs/operators';
 import { combineLatest, of  } from 'rxjs';
 
 import { User } from '../models/user';
@@ -139,6 +139,13 @@ export class DataService {
         resolve(response);
       }, reject);
     });
+  }
+
+  getLastChangeDate() {
+    const options = ref => ref.orderBy('date', 'desc').limit(1);
+    return this.collection('changes', options).pipe(
+      flatMap(changes => changes.map(changeObj => new Change(changeObj).date.toDate()) )
+    );
   }
 
 }
