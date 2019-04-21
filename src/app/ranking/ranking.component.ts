@@ -8,7 +8,7 @@ import { DataService } from '../services/data.service';
   selector: 'app-ranking',
   template: `
     <h2 class="uk-heading-divider">Classement</h2>
-    <table class="uk-table uk-table-divider">
+    <table class="uk-table uk-table-divider" *ngIf="users && users.length > 0; else noUsers">
       <thead>
         <tr>
           <th>Nom</th>
@@ -24,6 +24,10 @@ import { DataService } from '../services/data.service';
         </tr>
       </tbody>
     </table>
+
+    <ng-template #noUsers>
+      Pas de données.
+    </ng-template>
   `,
   styles: []
 })
