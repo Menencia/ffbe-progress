@@ -32,6 +32,7 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { AboutComponent } from './about/about.component';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeFr, 'fr');
@@ -55,7 +56,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     SettingsComponent,
     LocalizedDatePipe,
     HomeComponent,
-    ChangesComponent
+    ChangesComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,

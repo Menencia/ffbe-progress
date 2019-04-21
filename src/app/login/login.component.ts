@@ -44,7 +44,7 @@ import { AuthService } from '../services/auth.service';
         <div *ngIf="auth.user$ | async as user; else showLogin">
           <ul class="uk-navbar-nav">
             <li class="uk-navbar-item">
-              <a href="#">{{ user.tag }}</a>
+              <a href="#">{{ user.tag }} <span uk-icon="icon:  triangle-down"></span></a>
               <div class="uk-navbar-dropdown">
                 <ul class="uk-nav uk-navbar-dropdown-nav">
                   <li>
