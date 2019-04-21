@@ -9,6 +9,7 @@ import { Component, OnInit } from '@angular/core';
       <li>Développeur : Menencia</li>
       <li>Admin : Breizh</li>
       <li>Framework JS : Angular</li>
+      <li>Framework CSS : Uikit</li>
     </ul>
   `,
   styles: []

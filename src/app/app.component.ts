@@ -16,14 +16,11 @@ import {TranslateService} from '@ngx-translate/core';
         <div class="uk-grid uk-margin-top uk-margin-bottom uk-text-small">
           <ul class="uk-list uk-width-1-3@m">
             <li>
-              Made with 💗 by <a href="https://menencia.com" target="_blank">Menencia</a>
+              Made with <span uk-icon="heart"></span> by <a href="https://menencia.com" target="_blank">Menencia</a>
             </li>
           </ul>
           <ul class="uk-list uk-width-1-3@m">
             <li class="uk-nav-header">Github</li>
-            <li>
-              <a [href]="githubReleases" target="_blank">Releases</a>
-            </li>
             <li>
               <a [href]="githubCommits" target="_blank">Commits</a>
             </li>
@@ -56,7 +53,6 @@ import {TranslateService} from '@ngx-translate/core';
 })
 export class AppComponent implements OnInit {
 
-  githubReleases = 'https://github.com/Menencia/ffbe-progress/releases';
   githubCommits = 'https://github.com/Menencia/ffbe-progress/commits/master';
   githubIssues = 'https://github.com/Menencia/ffbe-progress/issues';
 
