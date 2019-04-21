@@ -27,6 +27,11 @@ import {TranslateService} from '@ngx-translate/core';
               <a [href]="githubIssues" target="_blank">Github issues</a>
             </li>
           </ul>
+          <ul class="uk-list uk-width-1-3@m">
+            <li>
+              <a href="#" routerLink="/changes">Derniers changements</a>
+            </li>
+          </ul>
         </div>
       </div>
     </footer>
