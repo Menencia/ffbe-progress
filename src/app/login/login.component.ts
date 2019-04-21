@@ -44,25 +44,29 @@ import { AuthService } from '../services/auth.service';
         <div *ngIf="auth.user$ | async as user; else showLogin">
           <ul class="uk-navbar-nav">
             <li class="uk-navbar-item">
-              {{ user.tag }}
-            </li>
-            <li class="uk-navbar-item">
-              <a href="#" routerLink="/settings">
-                <span class="uk-icon uk-margin-small-right" uk-icon="icon: settings"></span>
-                Options
-              </a>
-            </li>
-            <li *ngIf="user.admin">
-              <a href="#" routerLink="/admin">
-                <span class="uk-icon uk-margin-small-right" uk-icon="icon: cog"></span>
-                Admin
-              </a>
-            </li>
-            <li *ngIf="user.admin">
-              <a href="#"(click)="logout()">
-                <span class="uk-icon uk-margin-small-right" uk-icon="icon: sign-out"></span>
-                Déconnexion
-              </a>
+              <a href="#">{{ user.tag }}</a>
+              <div class="uk-navbar-dropdown">
+                <ul class="uk-nav uk-navbar-dropdown-nav">
+                  <li>
+                    <a href="#" routerLink="/settings">
+                      <span class="uk-icon uk-margin-small-right" uk-icon="icon: settings"></span>
+                      Options
+                    </a>
+                  </li>
+                  <li *ngIf="user.admin">
+                    <a href="#" routerLink="/admin">
+                      <span class="uk-icon uk-margin-small-right" uk-icon="icon: cog"></span>
+                      Admin
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#"(click)="logout()">
+                      <span class="uk-icon uk-margin-small-right" uk-icon="icon: sign-out"></span>
+                      Déconnexion
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </li>
           </ul>
         </div>
