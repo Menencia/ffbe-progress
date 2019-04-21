@@ -110,8 +110,7 @@ export class AdminChallengesComponent implements OnInit, OnDestroy {
   }
 
   changeCategory() {
-    this.data.getChallengesFromCategory(this.category.uid)
-      .subscribe(challenges => this.challenges = challenges);
+    this.challenges = this.category.challenges;
   }
 
   addChallenge() {
@@ -128,7 +127,8 @@ export class AdminChallengesComponent implements OnInit, OnDestroy {
   _modifyChallenge() {
     UIkit.modal('#modal-challenge').hide();
     if (this.challenge.uid) {
-      this.afs.doc(`challenges/${this.challenge.uid}`).update(this.challenge.export());
+      this.afs.doc(`categories/${this.category.uid}/challenges/${this.challenge.uid}`)
+        .update(this.challenge.export());
 
       // new change
       this.changeService.challengeUpdate(
@@ -137,7 +137,7 @@ export class AdminChallengesComponent implements OnInit, OnDestroy {
           this.original.missions !== this.challenge.missions)
       );
     } else {
-      this.afs.collection('challenges').add(this.challenge.export());
+      this.afs.collection(`categories/${this.category.uid}/challenges`).add(this.challenge.export());
 
       // new change
       this.changeService.challengeCreate(
@@ -145,23 +145,32 @@ export class AdminChallengesComponent implements OnInit, OnDestroy {
         false
       );
     }
+
+    this.refreshChallenges();
   }
 
   deleteChallenge(ch) {
     UIkit.modal.confirm('Confirmer?').then(
       () => {
-        this.afs.doc(`challenges/${ch.uid}`).delete();
+        this.afs.doc(`categories/${this.category.uid}/challenges/${ch.uid}`).delete();
 
         // new change
         this.changeService.challengeDelete(
-          `${this.challenge.label.fr} (${this.category.name.fr})`,
+          `${ch.label.fr} (${this.category.name.fr})`,
           true
         );
+
+        this.refreshChallenges();
       },
       () => {
         // do nothing
       }
     );
+  }
+
+  refreshChallenges() {
+    this.data.getChallenges(this.category.uid)
+      .subscribe(challenges => this.challenges = challenges);
   }
 
 }

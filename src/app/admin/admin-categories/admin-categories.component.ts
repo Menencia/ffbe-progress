@@ -108,7 +108,7 @@ export class AdminCategoriesComponent implements OnInit, OnDestroy {
         this.afs.doc(`categories/${category.uid}`).delete();
 
         // new change
-        this.changeService.categoryDelete(this.category.name.fr, false);
+        this.changeService.categoryDelete(category.name.fr, false);
       },
       () => {
         // do nothing

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
-import { map, flatMap } from 'rxjs/operators';
+import { map, flatMap, switchMap } from 'rxjs/operators';
 import { combineLatest, of  } from 'rxjs';
 
 import { User } from '../models/user';
@@ -50,20 +50,10 @@ export class DataService {
     );
   }
 
-  getChallenges() {
+  getChallenges(categoryUid) {
     const options = ref => ref
       .orderBy('position', 'asc');
-    return this.collection('challenges', options)
-    .pipe(
-      map(challenges => challenges.map(challengeObj => new Challenge(challengeObj)) )
-    );
-  }
-
-  getChallengesFromCategory(categoryUid) {
-    const options = ref => ref
-      .where('category', '==', categoryUid)
-      .orderBy('position', 'asc');
-    return this.collection('challenges', options)
+    return this.collection(`categories/${categoryUid}/challenges`, options)
     .pipe(
       map(challenges => challenges.map(challengeObj => new Challenge(challengeObj)) )
     );
@@ -73,7 +63,18 @@ export class DataService {
     const options = ref => ref.orderBy('position', 'asc');
     return this.collection('categories', options)
       .pipe(
-        map(categories => categories.map(categoryObj => new Category(categoryObj)) )
+        map(categories => categories.map(categoryObj => {
+          return new Category(categoryObj);
+        }) ),
+        switchMap(categories => {
+          const res = categories.map(category => {
+            return this.getChallenges(category.uid)
+              .pipe(
+                map(challenges => Object.assign(category, {challenges}))
+              );
+          });
+          return combineLatest(...res);
+        })
       );
   }
 
@@ -94,21 +95,18 @@ export class DataService {
 
   getMyCategories(user) {
     return combineLatest([
-      this.getChallenges(),
       this.getCategories(),
       this.getMyChallenges(user)
     ]).pipe(
       map(data => {
-        const [challenges, categories, mychallenges] = data;
+        const [categories, mychallenges] = data;
         // challenges & categories
         let done, nbMissions;
         const mycategories = [];
         for (const category of categories) {
+          console.log('cat', category);
           const mycategory = new MyCategory(category);
-          for (const challenge of challenges) {
-            if (challenge.category !== category.uid) {
-              continue;
-            }
+          for (const challenge of category.challenges) {
             const mychallenge = mychallenges.find(c => c.challenge === challenge.uid);
             if (mychallenge) {
               done = true;
@@ -150,7 +148,10 @@ export class DataService {
   }
 
   getLastChangeDate() {
-    const options = ref => ref.orderBy('date', 'desc').limit(1);
+    const options = ref => ref
+      .where('important', '==', true)
+      .orderBy('date', 'desc')
+      .limit(1);
     return this.collection('changes', options).pipe(
       flatMap(changes => changes.map(changeObj => new Change(changeObj).date.toDate()) )
     );

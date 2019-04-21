@@ -7,7 +7,6 @@ export class Challenge extends Model {
   missions: boolean;
   points: number;
   position: number;
-  category: Category;
 
   constructor(challengeObj) {
     super(challengeObj, {
@@ -15,14 +14,7 @@ export class Challenge extends Model {
       missions: false,
       points: null,
       position: null,
-      category: null,
     });
-  }
-
-  export() {
-    const res = super.export();
-    res['category'] = res['category'].uid;
-    return res;
   }
 
 }
