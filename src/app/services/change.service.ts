@@ -126,7 +126,7 @@ export class ChangeService {
 
   // Private function
 
-  _add(name, important, operation, type) {
+  _add(name, important, type, operation) {
     this.add(new Change({
       name,
       type,

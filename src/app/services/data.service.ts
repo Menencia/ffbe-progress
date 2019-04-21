@@ -104,7 +104,6 @@ export class DataService {
         let done, nbMissions;
         const mycategories = [];
         for (const category of categories) {
-          console.log('cat', category);
           const mycategory = new MyCategory(category);
           for (const challenge of category.challenges) {
             const mychallenge = mychallenges.find(c => c.challenge === challenge.uid);
