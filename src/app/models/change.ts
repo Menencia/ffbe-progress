@@ -2,18 +2,6 @@ import { Model } from './model';
 import { firestore } from 'firebase';
 import Timestamp = firestore.Timestamp;
 
-export enum ChangeType {
-  Category = 'cat',
-  Challenge = 'ch',
-  Rank = 'r',
-}
-
-export enum ChangeOperation {
-  Create = 'c',
-  Update = 'u',
-  Delete = 'd',
-}
-
 /**
  * Examples:
  * "Création de la catégorie 'Abysses dangereuses' par Menencia."
@@ -22,18 +10,16 @@ export enum ChangeOperation {
  */
 export class Change extends Model {
   uid: string;
-  name: string;
-  type: ChangeType;
-  operation: ChangeOperation;
+  label: string;
+  args: object;
   author: string;
   date: Timestamp;
   important: boolean;
 
   constructor(changeObj) {
     super(changeObj, {
-      name: null,
-      type: null,
-      operation: null,
+      label: null,
+      args: null,
       author: null,
       date: null,
       important: false,

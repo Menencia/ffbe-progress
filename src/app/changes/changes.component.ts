@@ -17,7 +17,7 @@ import { Change } from '../models/change';
     <tbody>
       <tr *ngFor="let change of changes">
         <td>{{ change.date.toDate() | localizedDate }}</td>
-        <td>{{ 'CHANGE.' + change.type.toUpperCase() + '_' + change.operation.toUpperCase() | translate:{name: change.name} }}</td>
+        <td>{{ change.label.toUpperCase() | translate:change.args }}</td>
         <td><span *ngIf="change.important" uk-icon="star"></span></td>
       </tr>
     </tbody>

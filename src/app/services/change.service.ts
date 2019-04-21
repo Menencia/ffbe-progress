@@ -1,9 +1,21 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Change, ChangeType, ChangeOperation } from '../models/change';
+import { Change } from '../models/change';
 import { DataService } from './data.service';
 import { User } from '../models/user';
 import { AuthService } from './auth.service';
+
+enum ChangeType {
+  Category = 'cat',
+  Challenge = 'ch',
+  Rank = 'r',
+}
+
+enum ChangeOperation {
+  Create = 'c',
+  Update = 'u',
+  Delete = 'd',
+}
 
 @Injectable({
   providedIn: 'root'
@@ -128,9 +140,8 @@ export class ChangeService {
 
   _add(name, important, type, operation) {
     this.add(new Change({
-      name,
-      type,
-      operation,
+      label: `CHANGE.${type}_${operation}`,
+      args: {name},
       author: this.user.uid,
       date: new Date(),
       important,
