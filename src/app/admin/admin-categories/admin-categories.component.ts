@@ -14,6 +14,7 @@ import { ChangeService } from 'src/app/services/change.service';
       <thead>
         <tr>
           <th>Nom</th>
+          <th>Défis</th>
           <th>Position</th>
           <th>Actions</th>
         </tr>
@@ -21,6 +22,7 @@ import { ChangeService } from 'src/app/services/change.service';
       <tbody>
         <tr *ngFor="let cat of categories">
           <td>{{ cat.name.fr }}</td>
+          <td>{{ cat.challenges.length }}</td>
           <td>{{ cat.position }}</td>
           <td>
             <a uk-icon="pencil" (click)="modifyCategory(cat)"></a>
@@ -102,7 +104,13 @@ export class AdminCategoriesComponent implements OnInit, OnDestroy {
   }
 
   deleteCategory(category: Category) {
-    // TODO check if the category is empty
+
+    // check if the category is empty
+    if (category.challenges.length > 0) {
+      UIkit.modal.alert('Cette catégorie ne peut pas être supprimée car elle contient des défis.');
+      return;
+    }
+
     UIkit.modal.confirm('Confirmer?').then(
       () => {
         this.afs.doc(`categories/${category.uid}`).delete();
