@@ -5,7 +5,7 @@ import {TranslateService} from '@ngx-translate/core';
   selector: 'app-root',
   template: `
     <div>
-      <app-login></app-login>
+      <app-header></app-header>
       <div class="uk-container">
         <router-outlet></router-outlet>
       </div>

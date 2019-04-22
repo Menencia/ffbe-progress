@@ -89,9 +89,6 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
   }
 
-  login() {
-    this.auth.loginWithGoogle();
-  }
   logout() {
     this.auth.logout();
   }

@@ -9,12 +9,14 @@ import { SettingsComponent } from '../settings/settings.component';
 import { AdminComponent } from '../admin/admin.component';
 import { ChangesComponent } from '../changes/changes.component';
 import { AboutComponent } from '../about/about.component';
+import { LoginComponent } from '../login/login.component';
 
 import { AdminGuard } from '../guards/admin.guard';
 import { UserGuard } from '../guards/user.guard';
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent },
+  { path: 'login', component: LoginComponent },
   { path: 'mychallenges', component: MychallengesEditComponent, canActivate: [UserGuard] },
   { path: 'profile/:id', component: MychallengesComponent },
   { path: 'settings', component: SettingsComponent, canActivate: [UserGuard] },

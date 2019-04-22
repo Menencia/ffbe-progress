@@ -52,16 +52,13 @@ export class AuthService {
   }
 
   createAccount(email: string, password: string) {
-    this.afAuth.auth.createUserWithEmailAndPassword(email, password)
-      .catch((error) => {
-        console.log(error)
-      });
+    return this.afAuth.auth.createUserWithEmailAndPassword(email, password);
   }
 
   loginWithPassword(email: string, password: string) {
-    this.afAuth.auth.signInWithEmailAndPassword(email, password)
-      .catch((error) => {
-        console.log(error);
+    return this.afAuth.auth.signInWithEmailAndPassword(email, password)
+      .then(credential => {
+        this.updateUser(credential.user);
       });
   }
 
