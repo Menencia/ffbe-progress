@@ -68,7 +68,6 @@ export class GameService {
       rank: {
         points: points,
         date: new Date(),
-        obsolete: false,
       }
     }, { merge: true });
   }

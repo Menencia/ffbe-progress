@@ -14,7 +14,6 @@ export class User extends Model {
   rank: {
     points: number;
     date: Timestamp;
-    obsolete: boolean;
   };
 
   constructor(userData) {
