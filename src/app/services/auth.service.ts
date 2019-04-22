@@ -45,7 +45,7 @@ export class AuthService {
   }
 
   loginWithGoogle() {
-    this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
+    return this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
       .then(credential => {
         this.updateUser(credential.user);
       });
