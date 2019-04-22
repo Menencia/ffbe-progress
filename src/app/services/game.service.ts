@@ -47,8 +47,8 @@ export class GameService {
     const mychallengesRef = this.afs.doc(`users/${user.uid}`).collection('mychallenges');
     for (const mychallenge of toSet) {
       mychallengesRef
-        .doc(mychallenge.challenge)
-        .set(mychallenge)
+        .doc(mychallenge.c)
+        .set({n: mychallenge.n})
         .then(() => this.updateTotal())
         .catch(() => this.updateTotal());
     }

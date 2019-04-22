@@ -171,7 +171,10 @@ export class MychallengesEditComponent implements OnInit {
     for (const e of B) {
       const found = A.find(f => f.challenge === e.challenge);
       if (!found || found.nbMissions !== e.nbMissions) {
-        toSet.push(e);
+        toSet.push({
+          c: e.challenge, // challenge
+          n: e.nbMissions // nbMissions
+        });
       }
     }
 

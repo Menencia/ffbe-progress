@@ -114,10 +114,10 @@ export class DataService {
         for (const category of categories) {
           const mycategory = new MyCategory(category);
           for (const challenge of category.challenges) {
-            const mychallenge = mychallenges.find(c => c.challenge === challenge.uid);
+            const mychallenge = mychallenges.find(c => c.uid === challenge.uid);
             if (mychallenge) {
               done = true;
-              nbMissions = mychallenge.nbMissions;
+              nbMissions = mychallenge.n;
             } else {
               done = false;
               nbMissions = 0;
