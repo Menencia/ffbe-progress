@@ -11,13 +11,15 @@ import { DataService } from '../services/data.service';
     <table class="uk-table uk-table-divider" *ngIf="users && users.length > 0; else noUsers">
       <thead>
         <tr>
+          <th></th>
           <th>Nom</th>
           <th>Points</th>
           <th>Date</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of users">
+        <tr *ngFor="let user of users; let i = index">
+          <td>#{{ i + 1 }}</td>
           <td><a [routerLink]="user.getProfileLink()">{{ user.getName() }}</a></td>
           <td>{{ user.rank.points }}pts</td>
           <td>{{ user.rank.date.toDate() | localizedDate }}</td>

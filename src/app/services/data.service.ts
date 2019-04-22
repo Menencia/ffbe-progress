@@ -45,7 +45,8 @@ export class DataService {
       options = ref => ref
         .where('rank.date', '>', lastChangeDate)
         .orderBy('rank.points', 'desc')
-        .orderBy('rank.date', 'desc');
+        .orderBy('rank.date', 'desc')
+        .limit(20);
     } else {
       options = ref => ref
         .orderBy('rank.points', 'desc')
