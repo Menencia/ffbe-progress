@@ -12,7 +12,7 @@ import { AuthService } from './services/auth.service';
 
 import { AppComponent } from './app.component';
 import { AdminComponent } from './admin/admin.component';
-import { LoginComponent } from './login/login.component';
+import { HeaderComponent } from './header/header.component';
 import { MychallengesEditComponent } from './mychallenges/mychallenges-edit/mychallenges-edit.component';
 import { AdminCategoriesComponent } from './admin/admin-categories/admin-categories.component';
 import { AdminChallengesComponent } from './admin/admin-challenges/admin-challenges.component';
@@ -45,7 +45,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
+    HeaderComponent,
     MychallengesEditComponent,
     AdminComponent,
     AdminCategoriesComponent,

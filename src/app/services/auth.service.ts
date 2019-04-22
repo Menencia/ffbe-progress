@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable, of } from 'rxjs';
+import { switchMap, map, take } from 'rxjs/operators';
 
 import { auth } from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 
-import { Observable, of } from 'rxjs';
-import { switchMap, map, take } from 'rxjs/operators';
-
 import { User } from '../models/user';
 
 import * as moment from 'moment';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -45,10 +44,24 @@ export class AuthService {
     );
   }
 
-  login() {
+  loginWithGoogle() {
     this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
       .then(credential => {
         this.updateUser(credential.user);
+      });
+  }
+
+  createAccount(email: string, password: string) {
+    this.afAuth.auth.createUserWithEmailAndPassword(email, password)
+      .catch((error) => {
+        console.log(error)
+      });
+  }
+
+  loginWithPassword(email: string, password: string) {
+    this.afAuth.auth.signInWithEmailAndPassword(email, password)
+      .catch((error) => {
+        console.log(error);
       });
   }
 

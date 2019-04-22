@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-header',
   template: `
     <nav class="uk-navbar-container uk-margin" uk-navbar>
 
@@ -71,9 +71,9 @@ import { AuthService } from '../services/auth.service';
           </ul>
         </div>
         <ng-template #showLogin>
-          <a class="uk-button uk-button-primary" href="javascript:void(0)" (click)="login()">
+          <a class="uk-button uk-button-primary" href="#" routerLink="/login">
             <span class="uk-icon uk-margin-small-right" uk-icon="icon: sign-in"></span>
-            Se connecter avec Google
+            Se connecter
           </a>
         </ng-template>
       </div>
@@ -82,7 +82,7 @@ import { AuthService } from '../services/auth.service';
   `,
   styles: []
 })
-export class LoginComponent implements OnInit {
+export class HeaderComponent implements OnInit {
 
   constructor(public auth: AuthService) { }
 
@@ -90,7 +90,7 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    this.auth.login();
+    this.auth.loginWithGoogle();
   }
   logout() {
     this.auth.logout();
