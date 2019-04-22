@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
-import { map, flatMap, switchMap } from 'rxjs/operators';
+import { map, flatMap, switchMap, last } from 'rxjs/operators';
 import { combineLatest, of  } from 'rxjs';
 
 import { User } from '../models/user';
@@ -40,10 +40,17 @@ export class DataService {
   }
 
   _getUsersRanking(lastChangeDate) {
-    const options = ref => ref
-      .where('rank.date', '>', lastChangeDate)
-      .orderBy('rank.date', 'desc')
-      .orderBy('rank.points', 'desc');
+    let options;
+    if (lastChangeDate) {
+      options = ref => ref
+        .where('rank.date', '>', lastChangeDate)
+        .orderBy('rank.points', 'desc')
+        .orderBy('rank.date', 'desc');
+    } else {
+      options = ref => ref
+        .orderBy('rank.points', 'desc')
+        .orderBy('rank.date', 'desc');
+    }
     return this.collection('users', options)
     .pipe(
       map(users => users.map(userObj => new User(userObj)) )
@@ -152,7 +159,12 @@ export class DataService {
       .orderBy('date', 'desc')
       .limit(1);
     return this.collection('changes', options).pipe(
-      flatMap(changes => changes.map(changeObj => new Change(changeObj).date.toDate()) )
+      flatMap(changes => {
+        if (changes.length === 0) {
+          return of(null);
+        }
+        return changes.map(changeObj => new Change(changeObj).date.toDate());
+      })
     );
   }
 
