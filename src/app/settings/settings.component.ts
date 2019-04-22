@@ -10,46 +10,46 @@ import { User } from '../models/user';
     <form class="uk-form-horizontal" *ngIf="user" #settings="ngForm">
 
       <div class="uk-margin">
-          <label class="uk-form-label uk-text-bold" for="displayName">
-            <span uk-icon="user"></span>
-            <span class="uk-text-middle">Nom affiché</span>
-          </label>
-          <div class="uk-form-controls">
-            <input class="uk-input"
-              id="displayName"
-              name="displayName"
-              type="text"
-              [(ngModel)]="user.displayName"
-              pattern="[a-zA-Z0-9]*"
-              #displayName="ngModel"
-              required>
-            <div [hidden]="displayName.valid || displayName.pristine" class="uk-alert uk-alert-danger">
-              Champ obligatoire : ne peut contenir que des lettres ou des chiffres.
-            </div>
+        <label class="uk-form-label uk-text-bold" for="displayName">
+          <span uk-icon="user"></span>
+          <span class="uk-text-middle">Nom affiché*</span>
+        </label>
+        <div class="uk-form-controls">
+          <input class="uk-input"
+            id="displayName"
+            name="displayName"
+            type="text"
+            [(ngModel)]="user.displayName"
+            pattern="[a-zA-Z0-9]*"
+            #displayName="ngModel"
+            required>
+          <div [hidden]="displayName.valid || displayName.pristine" class="uk-alert uk-alert-danger">
+            Champ obligatoire : ne peut contenir que des lettres ou des chiffres.
           </div>
+        </div>
       </div>
 
       <div class="uk-margin">
-          <label class="uk-form-label uk-text-bold" style="margin-top: 0;">
-            <span uk-icon="hashtag"></span>
-            <span class="uk-text-middle">Tag</span>
-          </label>
-          <div class="uk-form-controls">
-            <span *ngIf="user.tag else noTag">{{ user.tag }}</span>
-            <ng-template #noTag>
-              <i>N/A</i>
-            </ng-template>
-          </div>
+        <label class="uk-form-label uk-text-bold" style="margin-top: 0;">
+          <span uk-icon="hashtag"></span>
+          <span class="uk-text-middle">Tag</span>
+        </label>
+        <div class="uk-form-controls">
+          <span *ngIf="user.tag else noTag">{{ user.tag }}</span>
+          <ng-template #noTag>
+            <i>N/A</i>
+          </ng-template>
+        </div>
       </div>
 
       <div class="uk-margin">
-          <div class="uk-form-label uk-text-bold" style="margin-top: 0;">
-            <span uk-icon="mail"></span>
-            <span class="uk-text-middle"> Email</span>
-          </div>
-          <div class="uk-form-controls">
-            {{ user.email }}
-          </div>
+        <div class="uk-form-label uk-text-bold" style="margin-top: 0;">
+          <span uk-icon="mail"></span>
+          <span class="uk-text-middle"> Email</span>
+        </div>
+        <div class="uk-form-controls">
+          {{ user.email }}
+        </div>
       </div>
 
       <button class="uk-button uk-button-primary uk-align-right"

@@ -37,17 +37,43 @@ import { ChangeService } from 'src/app/services/change.service';
     <!-- MODAL category -->
     <div id="modal-category" uk-modal>
       <div class="uk-modal-dialog uk-modal-body" *ngIf="category">
-          <button class="uk-modal-close-default" type="button" uk-close></button>
-          <h2 class="uk-modal-title">{{ title }}</h2>
-          <p>
-            <label for="name">Nom</label>
-            <input type="text" [(ngModel)]="category.name.fr" />
-          </p>
-          <p>
-            <label for="position">Position</label>
-            <input type="number" [(ngModel)]="category.position" />
-          </p>
-          <p><button (click)="_modifyCategory()">Valider</button></p>
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <h4 class="uk-modal-title">{{ title }}</h4>
+        <form class="uk-form-horizontal" #categories="ngForm">
+
+          <div class="uk-margin">
+            <div class="uk-form-label uk-text-bold">
+              Label*
+            </div>
+            <div class="uk-form-controls">
+              <input class="uk-input"
+                id="catName"
+                name="catName"
+                type="text"
+                [(ngModel)]="category.name.fr"
+                #catName="ngModel"
+                required>
+            </div>
+          </div>
+
+          <div class="uk-margin">
+            <div class="uk-form-label uk-text-bold">
+              Position
+            </div>
+            <div class="uk-form-controls">
+              <input class="uk-input"
+                id="catPosition"
+                name="catPosition"
+                type="number"
+                [(ngModel)]="category.position"
+                #catPosition="ngModel">
+            </div>
+          </div>
+
+          <button class="uk-button uk-button-primary uk-align-right"
+            [disabled]="!categories.form.valid"
+            (click)="_modifyCategory()">Valider</button>
+        </form>
       </div>
     </div>
   `,
@@ -57,7 +83,7 @@ export class AdminCategoriesComponent implements OnInit, OnDestroy {
 
   public categories: Category[] = [];
 
-  public title = 'Cat';
+  public title = 'Éditer une catégorie';
   public category: Category;
 
   constructor(

@@ -51,29 +51,80 @@ import { ChangeService } from 'src/app/services/change.service';
     <!-- MODAL challenge -->
     <div id="modal-challenge" uk-modal>
       <div class="uk-modal-dialog uk-modal-body" *ngIf="challenge">
-          <button class="uk-modal-close-default" type="button" uk-close></button>
-          <h2 class="uk-modal-title">{{ title }}</h2>
-          <p>
-            <label for="name">Catégorie</label>
-            {{ category.name.fr }}
-          </p>
-          <p>
-            <label for="name">Label</label>
-            <input type="text" [(ngModel)]="challenge.label.fr" />
-          </p>
-          <p>
-            <label for="missions">Missions</label>
-            <input type="checkbox" [(ngModel)]="challenge.missions" />
-          </p>
-          <p>
-            <label for="number">Points</label>
-            <input type="number" [(ngModel)]="challenge.points" />
-          </p>
-          <p>
-            <label for="position">Position</label>
-            <input type="number" [(ngModel)]="challenge.position" />
-          </p>
-          <p><button (click)="_modifyChallenge()">Valider</button></p>
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <h4 class="uk-modal-title">{{ title }}</h4>
+        <form class="uk-form-horizontal" #challenges="ngForm">
+
+          <div class="uk-margin">
+            <div class="uk-form-label uk-text-bold" style="margin-top: 0;">
+              Catégorie
+            </div>
+            <div class="uk-form-controls">
+              {{ category.name.fr }}
+            </div>
+          </div>
+
+          <div class="uk-margin">
+            <div class="uk-form-label uk-text-bold">
+              Label*
+            </div>
+            <div class="uk-form-controls">
+              <input class="uk-input"
+                id="chName"
+                name="chName"
+                type="text"
+                [(ngModel)]="challenge.label.fr"
+                #chName="ngModel"
+                required>
+            </div>
+          </div>
+
+          <div class="uk-margin">
+            <div class="uk-form-label uk-text-bold" style="margin-top: 0;">
+              Missions
+            </div>
+            <div class="uk-form-controls">
+              <input class="uk-checkbox"
+                id="chMissions"
+                name="chMissions"
+                type="checkbox"
+                [(ngModel)]="challenge.missions"
+                #chMissions="ngModel">
+            </div>
+          </div>
+
+          <div class="uk-margin">
+            <div class="uk-form-label uk-text-bold">
+              Points
+            </div>
+            <div class="uk-form-controls">
+              <input class="uk-input"
+                id="chPoints"
+                name="chPoints"
+                type="number"
+                [(ngModel)]="challenge.points"
+                #chPoints="ngModel">
+            </div>
+          </div>
+
+          <div class="uk-margin">
+            <div class="uk-form-label uk-text-bold">
+              Position
+            </div>
+            <div class="uk-form-controls">
+              <input class="uk-input"
+                id="chPosition"
+                name="chPosition"
+                type="number"
+                [(ngModel)]="challenge.position"
+                #chPosition="ngModel">
+            </div>
+          </div>
+
+          <button class="uk-button uk-button-primary uk-align-right"
+            [disabled]="!challenges.form.valid"
+            (click)="_modifyChallenge()">Valider</button>
+        </form>
       </div>
     </div>
   `,
@@ -88,7 +139,7 @@ export class AdminChallengesComponent implements OnInit, OnDestroy {
   public challenges: Challenge[] = [];
 
   // Modal
-  public title = 'Ch';
+  public title = 'Éditer un défi';
   public challenge: Challenge;
 
   constructor(

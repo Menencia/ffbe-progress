@@ -37,21 +37,57 @@ import { ChangeService } from 'src/app/services/change.service';
   <!-- MODAL rank -->
   <div id="modal-rank" uk-modal>
     <div class="uk-modal-dialog uk-modal-body" *ngIf="rank">
-        <button class="uk-modal-close-default" type="button" uk-close></button>
-        <h2 class="uk-modal-title">{{ title }}</h2>
-        <p>
-          <label for="name">Nom</label>
-          <input type="text" [(ngModel)]="rank.label.fr" />
-        </p>
-        <p>
-          <label for="position">Niveau</label>
-          <input type="number" [(ngModel)]="rank.level" />
-        </p>
-        <p>
-          <label for="position">Points</label>
-          <input type="number" [(ngModel)]="rank.points" />
-        </p>
-        <p><button (click)="_modifyRank()">Valider</button></p>
+      <button class="uk-modal-close-default" type="button" uk-close></button>
+      <h4 class="uk-modal-title">{{ title }}</h4>
+      <form class="uk-form-horizontal" #ranks="ngForm">
+
+        <div class="uk-margin">
+          <div class="uk-form-label uk-text-bold">
+            Label*
+          </div>
+          <div class="uk-form-controls">
+            <input class="uk-input"
+              id="rName"
+              name="rName"
+              type="text"
+              [(ngModel)]="rank.label.fr"
+              #rName="ngModel"
+              required>
+          </div>
+        </div>
+
+        <div class="uk-margin">
+          <div class="uk-form-label uk-text-bold">
+            Niveau
+          </div>
+          <div class="uk-form-controls">
+            <input class="uk-input"
+              id="rLevel"
+              name="rLevel"
+              type="number"
+              [(ngModel)]="rank.level"
+              #rLevel="ngModel">
+          </div>
+        </div>
+
+        <div class="uk-margin">
+          <div class="uk-form-label uk-text-bold">
+            Points
+          </div>
+          <div class="uk-form-controls">
+            <input class="uk-input"
+              id="rPoints"
+              name="rPoints"
+              type="number"
+              [(ngModel)]="rank.points"
+              #rPoints="ngModel">
+          </div>
+        </div>
+
+        <button class="uk-button uk-button-primary uk-align-right"
+          [disabled]="!ranks.form.valid"
+          (click)="_modifyRank()">Valider</button>
+      </form>
     </div>
   </div>
 `,
@@ -61,7 +97,7 @@ export class AdminRanksComponent implements OnInit, OnDestroy {
 
   public ranks: Rank[] = [];
 
-  public title = 'Rnk';
+  public title = 'Éditer un rang';
   public rank: Rank;
 
   constructor(
