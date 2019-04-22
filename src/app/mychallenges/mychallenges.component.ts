@@ -22,7 +22,7 @@ import { DataService } from '../services/data.service';
         </div>
 
         <div class="uk-text-center uk-text-bold">
-          <span class="" *ngIf="rank">Nv{{ rank.level }}. {{ rank.label.fr }}</span>
+          <span class="" *ngIf="rank">{{ rank }}</span>
         </div>
     </div>
     <div class="uk-width-expand@m">
@@ -67,7 +67,7 @@ export class MychallengesComponent implements OnInit {
   public mycategories;
 
   totalPoints: number;
-  rank: Rank;
+  rank: string;
 
   constructor(
     public route: ActivatedRoute,

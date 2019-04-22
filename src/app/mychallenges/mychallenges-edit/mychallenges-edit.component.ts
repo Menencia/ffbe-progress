@@ -26,7 +26,7 @@ import { User } from 'src/app/models/user';
           </div>
 
           <div class="uk-text-center uk-text-bold">
-            <span class="" *ngIf="rank">Nv{{ rank.level }}. {{ rank.label.fr }}</span>
+            <span class="" *ngIf="rank">{{ rank }}</span>
           </div>
 
           <button class="uk-button uk-align-center"
@@ -100,7 +100,7 @@ export class MychallengesEditComponent implements OnInit {
   isSaveLoading = false;
 
   totalPoints: number;
-  rank: Rank;
+  rank: string;
 
   user: User;
   showLastChangeDateWarning: boolean;

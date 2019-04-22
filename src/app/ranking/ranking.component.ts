@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { combineLatest } from 'rxjs';
 
 import { User } from '../models/user';
+import { Rank } from '../models/rank';
 
 import { DataService } from '../services/data.service';
+import { GameService } from '../services/game.service';
 
 @Component({
   selector: 'app-ranking',
@@ -13,6 +16,7 @@ import { DataService } from '../services/data.service';
         <tr>
           <th></th>
           <th>Nom</th>
+          <th>Rang</th>
           <th>Points</th>
           <th>Date</th>
         </tr>
@@ -21,6 +25,7 @@ import { DataService } from '../services/data.service';
         <tr *ngFor="let user of users; let i = index">
           <td>#{{ i + 1 }}</td>
           <td><a [routerLink]="user.getProfileLink()">{{ user.getName() }}</a></td>
+          <td>{{ getRank(user.rank.points) }}</td>
           <td>{{ user.rank.points }}pts</td>
           <td>{{ user.rank.date.toDate() | localizedDate }}</td>
         </tr>
@@ -36,19 +41,33 @@ import { DataService } from '../services/data.service';
 export class RankingComponent implements OnInit {
 
   users: User[];
+  ranks: Rank[];
 
-  constructor(public data: DataService) { }
+  constructor(
+    public data: DataService,
+    public gameService: GameService,
+  ) { }
 
   ngOnInit() {
-    this.data.getUsersRanking()
-      .subscribe((users: User[]) => {
-        this.users = [];
-        for (const user of users) {
-          if (user.rank && user.rank.points) {
-            this.users.push(user);
-          }
+    combineLatest([
+      this.data.getRanks(),
+      this.data.getUsersRanking()
+    ]).subscribe((data) => {
+      const [ranks, users] = data as [Rank[], User[]];
+
+      this.ranks = ranks;
+
+      this.users = [] as User[];
+      for (const user of users) {
+        if (user.rank && user.rank.points) {
+          this.users.push(user);
         }
-      });
+      }
+    });
+  }
+
+  getRank(totalPoints) {
+    return this.gameService.getRank(totalPoints, this.ranks);
   }
 
 }

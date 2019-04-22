@@ -35,7 +35,10 @@ export class GameService {
       i += 1;
       rank = ranks[i];
     }
-    return rank;
+    if (rank) {
+      return `Nv${rank.level}. ${rank.label.fr}`;
+    }
+    return null;
   }
 
   save(toSet, toDelete, user: User, points, callback: Function) {
