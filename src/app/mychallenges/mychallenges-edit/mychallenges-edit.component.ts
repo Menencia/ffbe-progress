@@ -81,7 +81,14 @@ import { User } from 'src/app/models/user';
       </div>
     </div>
     `,
-  styles: []
+  styles: [`
+    .done-inactive:hover {
+      color: #009;
+    }
+    .star-inactive:hover {
+      color: #009;
+    }
+  `]
 })
 export class MychallengesEditComponent implements OnInit {
 
