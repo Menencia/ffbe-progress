@@ -21,15 +21,21 @@ export class MyChallenge {
     }
 
     if (this.challenge.missions) {
-      const missionPt = Math.floor(maxPts / 3);
-      pts += missionPt * this.nbMissions;
+      pts += Math.floor(maxPts / 3 * this.nbMissions);
     }
 
     return pts;
   }
 
   getTotalPts() {
-    return this.challenge.points * 2;
+
+    let pts = this.challenge.points;
+
+    if (this.challenge.missions) {
+      pts *= 2;
+    }
+
+    return pts;
   }
 
   export() {
