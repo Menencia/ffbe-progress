@@ -35,6 +35,8 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import { AboutComponent } from './about/about.component';
 import { LoginComponent } from './login/login.component';
 
+import { NgCircleProgressModule } from 'ng-circle-progress';
+
 // the second parameter 'fr' is optional
 registerLocaleData(localeFr, 'fr');
 
@@ -75,7 +77,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     }),
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireAuthModule,
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    NgCircleProgressModule.forRoot({})
   ],
   providers: [
     AuthService,

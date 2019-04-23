@@ -28,6 +28,10 @@ export class MyChallenge {
     return pts;
   }
 
+  getTotalPts() {
+    return this.challenge.points * 2;
+  }
+
   export() {
     return {
       challenge: this.challenge.uid,
