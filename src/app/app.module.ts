@@ -8,6 +8,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { firebaseConfig } from '../environments/firebase';
+import { FirestoreSettingsToken} from '@angular/fire/firestore';
 import { AuthService } from './services/auth.service';
 
 import { AppComponent } from './app.component';
@@ -82,6 +83,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     AuthService,
     AdminGuard,
     UserGuard,
+    { provide: FirestoreSettingsToken, useValue: {} },
   ],
   bootstrap: [AppComponent]
 })
