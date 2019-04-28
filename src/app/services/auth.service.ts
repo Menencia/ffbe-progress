@@ -68,14 +68,14 @@ export class AuthService {
 
   private updateUser(user) {
 
-    const userObj: User = new User({
+    const userObj = {
       uid: user.uid,
       name: user.displayName,
       email: user.email,
       lastConnected: moment().toDate()
-    });
+    };
 
-    return this.userRef.set(userObj.export(), { merge: true });
+    return this.userRef.set(userObj, { merge: true });
   }
 
   getUser() {
