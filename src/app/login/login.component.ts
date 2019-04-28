@@ -191,7 +191,7 @@ export class LoginComponent implements OnInit {
     const {email, password} = this.values.signin;
     this.auth.loginWithPassword(email, password)
       .then(() => {
-        this.router.navigateByUrl('/home');
+        this.redirect();
       })
       .catch(error => {
         this.errors.signin = error.message;
@@ -201,8 +201,19 @@ export class LoginComponent implements OnInit {
   loginWithGoogle() {
     this.auth.loginWithGoogle()
       .then(() => {
-        this.router.navigateByUrl('/home');
+        this.redirect();
       });
+  }
+
+  redirect() {
+    this.auth.user$.subscribe(user => {
+      if (user.displayName) {
+        const profileLink = user.getProfileLink();
+        this.router.navigateByUrl(profileLink);
+      } else {
+        this.router.navigateByUrl('/home');
+      }
+    });
   }
 
 }
