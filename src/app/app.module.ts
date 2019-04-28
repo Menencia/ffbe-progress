@@ -13,7 +13,6 @@ import { AuthService } from './services/auth.service';
 import { AppComponent } from './app.component';
 import { AdminComponent } from './admin/admin.component';
 import { HeaderComponent } from './header/header.component';
-import { MychallengesEditComponent } from './mychallenges/mychallenges-edit/mychallenges-edit.component';
 import { AdminCategoriesComponent } from './admin/admin-categories/admin-categories.component';
 import { AdminChallengesComponent } from './admin/admin-challenges/admin-challenges.component';
 import { AdminRanksComponent } from './admin/admin-ranks/admin-ranks.component';
@@ -49,7 +48,6 @@ export function HttpLoaderFactory(http: HttpClient) {
   declarations: [
     AppComponent,
     HeaderComponent,
-    MychallengesEditComponent,
     AdminComponent,
     AdminCategoriesComponent,
     AdminChallengesComponent,

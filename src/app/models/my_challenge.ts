@@ -3,12 +3,10 @@ import { Challenge } from './challenge';
 export class MyChallenge {
   done: boolean;
   nbMissions: number;
-  changed: boolean;
 
   constructor(public challenge: Challenge, done = false, nbMissions = 0) {
     this.done = done;
     this.nbMissions = nbMissions;
-    this.changed = false;
   }
 
   getPts() {
