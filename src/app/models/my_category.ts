@@ -27,8 +27,35 @@ export class MyCategory {
     return res;
   }
 
+  dones() {
+    let res = 0;
+    for (const mych of this.mychallenges) {
+      if (mych.done) {
+        res += 1 + mych.nbMissions;
+      }
+    }
+    return res;
+  }
+
+  totalMissionsAndChallenges() {
+    let res = 0;
+    for (const mych of this.mychallenges) {
+      res += 1 + (mych.challenge.missions ? 3 : 0);
+    }
+    return res;
+  }
+
   progress() {
-    return Math.floor(this.points() / this.totalPoints() * 100);
+    let totalPoints = this.totalPoints();
+    let res = 0;
+
+    if (totalPoints > 0) {
+      res = Math.floor(this.points() / totalPoints * 100);
+    } else {
+      res = Math.floor(this.dones() / this.totalMissionsAndChallenges() * 100);
+    }
+
+    return res;
   }
 
 }
