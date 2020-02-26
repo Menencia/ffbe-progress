@@ -41,17 +41,10 @@ export class DataService {
 
   _getUsersRanking(lastChangeDate) {
     let options;
-    if (lastChangeDate) {
-      options = ref => ref
-        .where('rank.date', '>', lastChangeDate)
-        .orderBy('rank.points', 'desc')
-        .orderBy('rank.date', 'asc')
-        .limit(20);
-    } else {
-      options = ref => ref
-        .orderBy('rank.points', 'desc')
-        .orderBy('rank.date', 'asc');
-    }
+    options = ref => ref
+      .orderBy('rank.points', 'desc')
+      .orderBy('rank.date', 'asc');
+
     return this.collection('users', options)
     .pipe(
       map(users => users.map(userObj => new User(userObj)) )
